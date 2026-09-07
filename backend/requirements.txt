@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+sqlalchemy
+aiosqlite
+pydantic
+pydantic-settings
+python-jose
+passlib[bcrypt]
+python-multipart
+celery
+redis
+chromadb
+google-generativeai
+tiktoken
+PyMuPDF
+aiofiles

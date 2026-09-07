@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gradient-brand: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%);
+  }
+
+  * {
+    @apply border-white/10;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-surface-900 text-white font-sans antialiased;
+    background: radial-gradient(ellipse at top, #1a1a3e 0%, #0f0f1a 60%);
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface-800;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brand-600 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-500;
+  }
+}
+
+@layer components {
+  /* === CARDS === */
+  .card {
+    @apply bg-surface-800/80 backdrop-blur-sm border border-white/5 rounded-2xl shadow-card;
+  }
+  .card-glow {
+    @apply card transition-all duration-300 hover:border-brand-500/30 hover:shadow-glow;
+  }
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl;
+  }
+
+  /* === BUTTONS === */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface-800 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-gradient-brand text-white hover:opacity-90 active:scale-95 focus:ring-brand-500 shadow-lg hover:shadow-glow;
+  }
+  .btn-secondary {
+    @apply btn bg-surface-600 text-white hover:bg-surface-500 border border-white/10 focus:ring-brand-500;
+  }
+  .btn-ghost {
+    @apply btn text-slate-300 hover:text-white hover:bg-white/5 focus:ring-brand-500;
+  }
+  .btn-danger {
+    @apply btn bg-danger-500/10 text-danger-400 hover:bg-danger-500/20 border border-danger-500/20 focus:ring-danger-500;
+  }
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs rounded-lg;
+  }
+  .btn-lg {
+    @apply px-7 py-3.5 text-base rounded-2xl;
+  }
+  .btn-icon {
+    @apply btn p-2.5;
+  }
+
+  /* === INPUTS === */
+  .input {
+    @apply w-full bg-surface-700 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all duration-200;
+  }
+  .input-label {
+    @apply block text-sm font-medium text-slate-300 mb-1.5;
+  }
+  .form-group {
+    @apply space-y-1.5;
+  }
+
+  /* === BADGES === */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .badge-brand {
+    @apply badge bg-brand-500/15 text-brand-300 border border-brand-500/20;
+  }
+  .badge-success {
+    @apply badge bg-accent-500/15 text-accent-400 border border-accent-500/20;
+  }
+  .badge-warn {
+    @apply badge bg-warn-500/15 text-warn-400 border border-warn-500/20;
+  }
+  .badge-danger {
+    @apply badge bg-danger-500/15 text-danger-400 border border-danger-500/20;
+  }
+  .badge-neutral {
+    @apply badge bg-white/5 text-slate-400 border border-white/10;
+  }
+
+  /* === LAYOUT === */
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .section-title {
+    @apply text-2xl font-display font-bold text-white;
+  }
+  .section-subtitle {
+    @apply text-slate-400 text-sm mt-1;
+  }
+
+  /* === STAT CARDS === */
+  .stat-card {
+    @apply card-glow p-5 space-y-1;
+  }
+  .stat-value {
+    @apply text-3xl font-display font-bold text-white;
+  }
+  .stat-label {
+    @apply text-xs text-slate-400 uppercase tracking-wider;
+  }
+  .stat-change {
+    @apply text-xs font-medium;
+  }
+
+  /* === SHIMMER LOADING === */
+  .skeleton {
+    @apply bg-gradient-to-r from-surface-700 via-surface-600 to-surface-700 bg-[length:200%_100%] animate-shimmer rounded-xl;
+  }
+
+  /* === COMPETENCY LEVEL INDICATORS === */
+  .level-bar {
+    @apply h-1.5 rounded-full overflow-hidden bg-surface-600;
+  }
+  .level-fill {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+  }
+
+  /* === QUIZ === */
+  .option-btn {
+    @apply w-full text-left px-5 py-4 rounded-xl border border-white/10 bg-surface-700/50 hover:border-brand-500/50 hover:bg-brand-500/5 transition-all duration-200 text-sm text-slate-300 hover:text-white cursor-pointer;
+  }
+  .option-btn.selected {
+    @apply border-brand-500 bg-brand-500/10 text-white;
+  }
+  .option-btn.correct {
+    @apply border-accent-500 bg-accent-500/10 text-accent-400;
+  }
+  .option-btn.incorrect {
+    @apply border-danger-500 bg-danger-500/10 text-danger-400;
+  }
+
+  /* === CHAT === */
+  .chat-bubble {
+    @apply max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed;
+  }
+  .chat-user {
+    @apply chat-bubble bg-brand-600 text-white ml-auto rounded-tr-sm;
+  }
+  .chat-assistant {
+    @apply chat-bubble bg-surface-700 text-slate-200 rounded-tl-sm border border-white/5;
+  }
+
+  /* === PROGRESS === */
+  .progress-bar {
+    @apply h-2 bg-surface-600 rounded-full overflow-hidden;
+  }
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+  }
+
+  /* === DOMAIN COLORS === */
+  .domain-statistical { @apply text-blue-400; }
+  .domain-technical { @apply text-purple-400; }
+  .domain-digital { @apply text-emerald-400; }
+  .domain-behavioural { @apply text-amber-400; }
+
+  .domain-bg-statistical { @apply bg-blue-500/10 border-blue-500/20; }
+  .domain-bg-technical { @apply bg-purple-500/10 border-purple-500/20; }
+  .domain-bg-digital { @apply bg-emerald-500/10 border-emerald-500/20; }
+  .domain-bg-behavioural { @apply bg-amber-500/10 border-amber-500/20; }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-400 via-purple-400 to-blue-400 bg-clip-text text-transparent;
+  }
+  .text-gradient-brand {
+    @apply bg-gradient-brand bg-clip-text text-transparent;
+  }
+  .border-gradient {
+    background: linear-gradient(surface-800, surface-800) padding-box,
+                var(--gradient-brand) border-box;
+    border: 1px solid transparent;
+  }
+  .glow-dot {
+    @apply w-2 h-2 rounded-full bg-accent-500 shadow-[0_0_8px_rgba(16,185,129,0.8)];
+  }
+}
