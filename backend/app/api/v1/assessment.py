@@ -151,6 +151,43 @@ async def submit_onboarding_assessment(
     quiz_id = quiz.id if quiz else 17
     return await submit_attempt(quiz_id=quiz_id, payload=payload, current_user=current_user, db=db)
 
+@router.get("/history")
+async def get_history(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(QuizAttempt).where(QuizAttempt.user_id == current_user.id))
+    return result.scalars().all()
+
+@router.get("/onboarding/status")
+async def get_onboarding_status(
+    current_user: User = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(
+        select(QuizAttempt)
+        .where(QuizAttempt.user_id == current_user.id, QuizAttempt.status == "COMPLETED")
+        .order_by(QuizAttempt.id.desc())
+    )
+    attempts = result.scalars().all()
+    
+    from app.models.profile import CompetencyProfile
+    cp_res = await db.execute(
+        select(CompetencyProfile)
+        .where(
+            CompetencyProfile.user_id == current_user.id,
+            CompetencyProfile.assessment_method == "ASSESSMENT_EVALUATED"
+        )
+    )
+    eval_comps = cp_res.scalars().all()
+    
+    has_completed = len(attempts) > 0 or len(eval_comps) > 0
+    latest = attempts[0] if attempts else None
+    
+    return {
+        "has_completed_baseline": has_completed,
+        "attempts_count": len(attempts),
+        "latest_score": latest.percentage if latest else None,
+        "eval_competencies_count": len(eval_comps)
+    }
+
 @router.get("/{quiz_id}")
 async def get_quiz(quiz_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Quiz).where(Quiz.id == quiz_id))
@@ -433,7 +470,3 @@ async def get_attempt_result(
         "feedback": feedback
     }
 
-@router.get("/history")
-async def get_history(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(QuizAttempt).where(QuizAttempt.user_id == current_user.id))
-    return result.scalars().all()

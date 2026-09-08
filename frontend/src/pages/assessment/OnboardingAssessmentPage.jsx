@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { quizAPI } from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
 import { 
@@ -10,6 +11,7 @@ import toast from 'react-hot-toast'
 
 export default function OnboardingAssessmentPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const user = useAuthStore((state) => state.user)
 
   const [loading, setLoading] = useState(true)
@@ -20,10 +22,30 @@ export default function OnboardingAssessmentPage() {
   const [userAnswers, setUserAnswers] = useState({})
   const [evaluationResult, setEvaluationResult] = useState(null)
   const [showReview, setShowReview] = useState(false)
+  const [alreadyCompleted, setAlreadyCompleted] = useState(false)
+  const [retrying, setRetrying] = useState(false)
 
   useEffect(() => {
     let isMounted = true
     async function fetchOnboardingQuiz() {
+      // 1. Check local storage
+      const localKey = user?.id ? `baseline_completed_${user.id}` : 'statiq_baseline_completed'
+      if (localStorage.getItem(localKey) === 'true' || localStorage.getItem('statiq_baseline_completed') === 'true') {
+        if (isMounted) setAlreadyCompleted(true)
+      }
+
+      // 2. Check backend status
+      try {
+        const statusRes = await quizAPI.getOnboardingStatus()
+        if (isMounted && statusRes.data?.has_completed_baseline) {
+          if (user?.id) localStorage.setItem(`baseline_completed_${user.id}`, 'true')
+          localStorage.setItem('statiq_baseline_completed', 'true')
+          setAlreadyCompleted(true)
+        }
+      } catch (err) {
+        // quiet ignore
+      }
+
       setLoading(true)
       try {
         const res = await quizAPI.getOnboarding()
@@ -197,10 +219,25 @@ export default function OnboardingAssessmentPage() {
       answers: userAnswers,
     }
 
+    const markCompleted = () => {
+      if (user?.id) {
+        localStorage.setItem(`baseline_completed_${user.id}`, 'true')
+      }
+      localStorage.setItem('statiq_baseline_completed', 'true')
+      setAlreadyCompleted(true)
+      queryClient.invalidateQueries({ queryKey: ['competency-profile'] })
+      queryClient.invalidateQueries({ queryKey: ['skill-gaps'] })
+      queryClient.invalidateQueries({ queryKey: ['learning-path'] })
+      queryClient.invalidateQueries({ queryKey: ['quiz-history'] })
+      queryClient.invalidateQueries({ queryKey: ['onboarding-status'] })
+      queryClient.invalidateQueries({ queryKey: ['personal-analytics'] })
+    }
+
     try {
       const res = await quizAPI.submitOnboarding(payload)
       toast.success('Assessment evaluated! Competency profile & skill gaps customized.')
       setEvaluationResult(res.data)
+      markCompleted()
     } catch (err) {
       console.error('Submit assessment error:', err)
       // If endpoint fails, evaluate locally and persist
@@ -233,9 +270,45 @@ export default function OnboardingAssessmentPage() {
         }))
       })
       toast.success('Competency assessment calculated!')
+      markCompleted()
     } finally {
       setSubmitting(false)
     }
+  }
+
+  const handleProceedToDashboard = () => {
+    if (user?.id) {
+      localStorage.setItem(`baseline_completed_${user.id}`, 'true')
+    }
+    localStorage.setItem('statiq_baseline_completed', 'true')
+    queryClient.invalidateQueries()
+    navigate('/dashboard')
+  }
+
+  // If user already finished the assessment, show confirmation with options instead of looping
+  if (alreadyCompleted && !retrying && !evaluationResult) {
+    return (
+      <div className="max-w-2xl mx-auto py-16 text-center space-y-6">
+        <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto text-emerald-400">
+          <CheckCircle2 className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-bold text-white font-display">Baseline Assessment Already Completed</h2>
+        <p className="text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
+          Your official statistical competency profile is active and calibrated with your verified skills, identified gaps, and customized learning path.
+        </p>
+        <div className="flex justify-center gap-4 pt-2">
+          <button onClick={handleProceedToDashboard} className="btn btn-primary shadow-glow flex items-center gap-2">
+            Go to Your Dashboard <ArrowRight className="w-4 h-4" />
+          </button>
+          <button 
+            onClick={() => { setRetrying(true); setAlreadyCompleted(false); }} 
+            className="btn btn-secondary text-xs"
+          >
+            Retake Assessment
+          </button>
+        </div>
+      </div>
+    )
   }
 
   if (loading) {
@@ -414,7 +487,7 @@ export default function OnboardingAssessmentPage() {
           </div>
 
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={handleProceedToDashboard}
             className="btn btn-primary py-3.5 px-6 font-bold shadow-glow flex items-center gap-2"
           >
             Proceed to Your Personalized Dashboard <ArrowRight className="w-4 h-4" />

@@ -93,6 +93,7 @@ export const quizAPI = {
   getAll: (params) => api.get('/quizzes', { params }),
   get: (id) => api.get(`/quizzes/${id}`),
   getOnboarding: () => api.get('/quizzes/onboarding'),
+  getOnboardingStatus: () => api.get('/quizzes/onboarding/status'),
   submitOnboarding: (data) => api.post('/quizzes/onboarding/submit', data),
   update: (id, data) => api.put(`/quizzes/${id}`, data),
   publish: (id) => api.post(`/quizzes/${id}/publish`),

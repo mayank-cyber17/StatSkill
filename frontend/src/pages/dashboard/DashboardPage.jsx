@@ -32,6 +32,11 @@ export default function DashboardPage() {
     queryFn: quizAPI.getHistory,
   })
 
+  const { data: onboardingStatus } = useQuery({
+    queryKey: ['onboarding-status'],
+    queryFn: quizAPI.getOnboardingStatus,
+  })
+
   // Format real radar data
   const radarData = (compRes?.data?.domains && compRes.data.domains.length > 0)
     ? compRes.data.domains
@@ -72,13 +77,22 @@ export default function DashboardPage() {
         { id: 3, title: 'Consumer Price Index (CPI) Weighting & Laspeyres Formula', type: 'IGOT_COURSE', estHours: 8, status: 'PENDING' },
       ]
 
+  const localAssessed = (user?.id && localStorage.getItem(`baseline_completed_${user.id}`) === 'true')
+    || localStorage.getItem('statiq_baseline_completed') === 'true'
+
   const attemptsList = Array.isArray(quizHistory?.data) ? quizHistory.data : []
   const quizzesDone = attemptsList.filter((a) => a.status === 'COMPLETED').length
   const avgQuizScore = quizzesDone > 0
     ? Math.round(attemptsList.reduce((acc, a) => acc + (a.percentage || 0), 0) / quizzesDone)
-    : 0
+    : (onboardingStatus?.data?.latest_score ? Math.round(onboardingStatus.data.latest_score) : 0)
 
-  const hasAssessed = compRes?.data?.competencies?.some((c) => c.method === 'ASSESSMENT_EVALUATED') || quizzesDone > 0
+  const hasAssessed = Boolean(
+    localAssessed ||
+    onboardingStatus?.data?.has_completed_baseline ||
+    quizzesDone > 0 ||
+    compRes?.data?.competencies?.some((c) => c.method === 'ASSESSMENT_EVALUATED') ||
+    (pathRes?.data?.items && pathRes.data.items.length > 0)
+  )
   const avgLevel = compRes?.data?.average_level || 3.2
   const pathwayProgress = pathRes?.data?.completion_percentage !== undefined
     ? pathRes.data.completion_percentage

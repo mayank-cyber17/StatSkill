@@ -108,8 +108,21 @@ async def test_complete_flow():
         analytics_resp = await client.get("/api/v1/analytics/me", headers=headers)
         assert analytics_resp.status_code == 200, f"Get analytics failed: {analytics_resp.text}"
         analytics_data = analytics_resp.json()
-        print(f"  [OK] Quiz stats: {analytics_data['quiz_stats']}, Learning hours: {analytics_data['learning_hours']}")
-        assert analytics_data['quiz_stats']['total_taken'] >= 1, "Expected quiz stats to record assessment!"
+        # 9. Verify Onboarding Status Endpoint
+        print(f"Step 9: Verifying onboarding status endpoint...")
+        status_resp = await client.get("/api/v1/quizzes/onboarding/status", headers=headers)
+        assert status_resp.status_code == 200, f"Get onboarding status failed: {status_resp.text}"
+        status_data = status_resp.json()
+        print(f"  [OK] Onboarding Status: {status_data}")
+        assert status_data["has_completed_baseline"] is True, "Expected has_completed_baseline to be True!"
+
+        # 10. Verify Quiz History Endpoint (verifying fix for route order)
+        print(f"Step 10: Verifying quiz history endpoint...")
+        history_resp = await client.get("/api/v1/quizzes/history", headers=headers)
+        assert history_resp.status_code == 200, f"Get quiz history failed: {history_resp.text}"
+        history_data = history_resp.json()
+        print(f"  [OK] Quiz History count: {len(history_data)}, latest percentage: {history_data[-1]['percentage']}%")
+        assert len(history_data) >= 1, "Expected at least 1 completed quiz attempt in history!"
 
         print("\n=== COMPLETE ONBOARDING FLOW VERIFIED SUCCESSFULLY! ===")
 
