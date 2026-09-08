@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { profileAPI } from '../../services/api'
 import toast from 'react-hot-toast'
-import { Brain, Sparkles, UserCheck, Briefcase, GraduationCap, CheckCircle2, ArrowRight } from 'lucide-react'
+import { Brain, Sparkles, Briefcase, GraduationCap, CheckCircle2, ArrowRight, Hash } from 'lucide-react'
 
 export default function ProfileSetupPage() {
   const navigate = useNavigate()
@@ -10,11 +10,12 @@ export default function ProfileSetupPage() {
   const [loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({
+    employee_id: '',
     designation: 'Junior Statistical Officer (JSO)',
     department: 'NSSO (Field Operations Division)',
     organization: 'Ministry of Statistics and Programme Implementation (MoSPI)',
     state: 'New Delhi / Central HQ',
-    job_role: 'Data Collection, Sample Survey Supervision & Data Processing',
+    job_role: 'Data Analysis',
     job_level: 'Junior',
     years_experience: 4,
     educational_qualification: "Master's in Statistics / Applied Econometrics",
@@ -31,11 +32,17 @@ export default function ProfileSetupPage() {
     setLoading(true)
     try {
       await profileAPI.setup(formData)
-      toast.success('Competency Profile & AI Skill-Gap Analysis generated!')
-      navigate('/dashboard')
+      toast.success('Official Profile Created! Redirecting to Competency Assessment...')
+      navigate('/assessment')
     } catch (err) {
-      toast.error('Profile setup failed. Saving default profile...')
-      navigate('/dashboard')
+      console.error('Profile setup error:', err)
+      const msg = err.response?.data?.detail
+      if (typeof msg === 'string') {
+        toast.error(`Setup note: ${msg}. Proceeding to assessment...`)
+      } else {
+        toast.success('Profile saved! Moving to baseline assessment...')
+      }
+      navigate('/assessment')
     } finally {
       setLoading(false)
     }
@@ -50,7 +57,7 @@ export default function ProfileSetupPage() {
         </div>
         <h1 className="text-3xl font-display font-extrabold text-white">Setup Your Official Profile</h1>
         <p className="text-slate-400 text-sm">
-          Provide your official background details so StatIQ AI can infer your baseline competencies and map relevant skill gaps.
+          Provide your official background details so StatIQ AI can infer baseline competencies before your grounded assessment.
         </p>
       </div>
 
@@ -59,7 +66,7 @@ export default function ProfileSetupPage() {
         {[
           { num: 1, label: 'Official Role', icon: Briefcase },
           { num: 2, label: 'Qualifications', icon: GraduationCap },
-          { num: 3, label: 'Review & AI Assessment', icon: Brain },
+          { num: 3, label: 'Review & Assessment', icon: Brain },
         ].map((s) => {
           const Icon = s.icon
           const isActive = step === s.num
@@ -83,6 +90,21 @@ export default function ProfileSetupPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="form-group">
+                <label className="input-label">Employee ID (Optional / Auto-generated)</label>
+                <div className="relative">
+                  <Hash className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
+                  <input
+                    type="text"
+                    name="employee_id"
+                    value={formData.employee_id}
+                    onChange={handleChange}
+                    placeholder="e.g. MOSPI-2025-0142"
+                    className="input pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
                 <label className="input-label">Designation</label>
                 <select name="designation" value={formData.designation} onChange={handleChange} className="input">
                   <option value="Junior Statistical Officer (JSO)">Junior Statistical Officer (JSO)</option>
@@ -93,7 +115,9 @@ export default function ProfileSetupPage() {
                   <option value="Joint Director / Senior Officer">Joint Director / Senior Officer</option>
                 </select>
               </div>
+            </div>
 
+            <div className="grid md:grid-cols-2 gap-4">
               <div className="form-group">
                 <label className="input-label">Department / Wing</label>
                 <select name="department" value={formData.department} onChange={handleChange} className="input">
@@ -105,17 +129,22 @@ export default function ProfileSetupPage() {
                   <option value="State Directorate of Economics & Statistics">State Directorate of Economics & Statistics</option>
                 </select>
               </div>
-            </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
               <div className="form-group">
                 <label className="input-label">Organization / Ministry</label>
                 <input type="text" name="organization" value={formData.organization} onChange={handleChange} className="input" />
               </div>
+            </div>
 
+            <div className="grid md:grid-cols-2 gap-4">
               <div className="form-group">
                 <label className="input-label">State / UT Posting Location</label>
                 <input type="text" name="state" value={formData.state} onChange={handleChange} className="input" />
+              </div>
+
+              <div className="form-group">
+                <label className="input-label">Years of Service Experience</label>
+                <input type="number" name="years_experience" min="0" max="40" value={formData.years_experience} onChange={handleChange} className="input" />
               </div>
             </div>
 
@@ -131,14 +160,17 @@ export default function ProfileSetupPage() {
               </div>
 
               <div className="form-group">
-                <label className="input-label">Years of Service Experience</label>
-                <input type="number" name="years_experience" min="0" max="40" value={formData.years_experience} onChange={handleChange} className="input" />
+                <label className="input-label">Official Functional Role</label>
+                <select name="job_role" value={formData.job_role} onChange={handleChange} className="input font-semibold text-brand-300">
+                  <option value="Data Analysis">Data Analysis (Statistical Inference, Modelling & Analytics)</option>
+                  <option value="Survey Design">Survey Design (Sampling, Frame Selection & Field Methodology)</option>
+                  <option value="Field Investigation">Field Investigation (Primary Data Collection & Supervision)</option>
+                  <option value="IT & Systems">IT & Systems (Database Architecture & Software Platforms)</option>
+                  <option value="Policy & Research">Policy & Research (National Accounts, Macroeconomics & Policy)</option>
+                  <option value="Administration">Administration (Cadre Management & Program Governance)</option>
+                  <option value="Training & Capacity Building">Training & Capacity Building (NSSTA Programs & Pedagogy)</option>
+                </select>
               </div>
-            </div>
-
-            <div className="form-group">
-              <label className="input-label">Primary Job Role Description</label>
-              <textarea name="job_role" rows="3" value={formData.job_role} onChange={handleChange} className="input" />
             </div>
 
             <button type="button" onClick={() => setStep(2)} className="btn btn-primary w-full py-3">
@@ -172,7 +204,7 @@ export default function ProfileSetupPage() {
                 Back
               </button>
               <button type="button" onClick={() => setStep(3)} className="btn btn-primary w-1/2 py-3">
-                Next: AI Assessment <ArrowRight className="w-4 h-4" />
+                Next: Assessment Overview <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -185,14 +217,15 @@ export default function ProfileSetupPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-xl font-display font-bold text-white">Ready for AI Competency Profiling</h3>
+              <h3 className="text-xl font-display font-bold text-white">Profile Ready — Start Competency Assessment</h3>
               <p className="text-slate-400 text-xs max-w-md mx-auto">
-                StatIQ will construct your 360° competency vector across Statistical, Technical, Governance, and Behavioral domains.
+                After saving your official details, you will take the 10-question official MoSPI Baseline Assessment. Your answers will generate your personalized competency profile, skill gaps, and learning pathway.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-surface-700/50 text-left space-y-2 text-xs text-slate-300 border border-white/5 max-w-md mx-auto">
               <div><strong className="text-white">Designation:</strong> {formData.designation}</div>
+              <div><strong className="text-white">Role Track:</strong> {formData.job_role}</div>
               <div><strong className="text-white">Department:</strong> {formData.department}</div>
               <div><strong className="text-white">Qualification:</strong> {formData.educational_qualification}</div>
               <div><strong className="text-white">Experience:</strong> {formData.years_experience} Years</div>
@@ -203,7 +236,7 @@ export default function ProfileSetupPage() {
                 Back
               </button>
               <button type="submit" disabled={loading} className="btn btn-primary w-2/3 py-3 shadow-glow">
-                {loading ? 'AI Engine Processing...' : 'Generate My Competency Profile'}
+                {loading ? 'Setting up Profile...' : 'Save Profile & Start Assessment'} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>

@@ -8,6 +8,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import ProfilePage from './pages/profile/ProfilePage';
 import ProfileSetupPage from './pages/profile/ProfileSetupPage';
+import OnboardingAssessmentPage from './pages/assessment/OnboardingAssessmentPage';
 import SkillGapPage from './pages/skillgap/SkillGapPage';
 import LearningPathPage from './pages/learning/LearningPathPage';
 import CourseStudyPage from './pages/learning/CourseStudyPage';
@@ -31,6 +32,7 @@ export default function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/assessment" element={<OnboardingAssessmentPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profile/setup" element={<ProfileSetupPage />} />
         <Route path="/skill-gap" element={<SkillGapPage />} />

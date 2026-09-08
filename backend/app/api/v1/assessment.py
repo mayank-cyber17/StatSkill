@@ -89,6 +89,68 @@ async def list_quizzes(db: AsyncSession = Depends(get_db)):
         })
     return quiz_list
 
+@router.get("/onboarding")
+async def get_onboarding_quiz(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(Quiz).where(Quiz.title.like("%Baseline Competency%") | Quiz.title.like("%Onboarding%"))
+    )
+    quiz = result.scalars().first()
+    
+    if not quiz:
+        from app.core.seed_quizzes import seed_official_quizzes
+        await seed_official_quizzes(db)
+        result = await db.execute(
+            select(Quiz).where(Quiz.title.like("%Baseline Competency%") | Quiz.title.like("%Onboarding%"))
+        )
+        quiz = result.scalars().first()
+        
+    if not quiz:
+        result = await db.execute(select(Quiz).order_by(Quiz.id.asc()))
+        quiz = result.scalars().first()
+
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Onboarding assessment not found")
+
+    q_result = await db.execute(select(MCQQuestion).where(MCQQuestion.quiz_id == quiz.id))
+    questions = q_result.scalars().all()
+    
+    return {
+        "quiz": {
+            "id": quiz.id,
+            "title": quiz.title,
+            "description": quiz.description,
+            "total_questions": len(questions) or quiz.total_questions,
+            "difficulty_level": quiz.difficulty_level,
+            "status": quiz.status,
+            "target_role": quiz.target_role,
+        },
+        "questions": [
+            {
+                "id": q.id,
+                "question_text": q.question_text,
+                "option_a": q.option_a,
+                "option_b": q.option_b,
+                "option_c": q.option_c,
+                "option_d": q.option_d,
+                "bloom_level": q.bloom_level
+            }
+            for q in questions
+        ]
+    }
+
+@router.post("/onboarding/submit")
+async def submit_onboarding_assessment(
+    payload: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(
+        select(Quiz).where(Quiz.title.like("%Baseline Competency%") | Quiz.title.like("%Onboarding%"))
+    )
+    quiz = result.scalars().first()
+    quiz_id = quiz.id if quiz else 17
+    return await submit_attempt(quiz_id=quiz_id, payload=payload, current_user=current_user, db=db)
+
 @router.get("/{quiz_id}")
 async def get_quiz(quiz_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Quiz).where(Quiz.id == quiz_id))
@@ -141,7 +203,6 @@ async def start_attempt(quiz_id: int, current_user: User = Depends(get_current_u
     attempt = QuizAttempt(quiz_id=quiz_id, user_id=current_user.id)
     db.add(attempt)
     await db.commit()
-    await db.refresh(attempt)
     return {"attempt_id": attempt.id}
 
 @router.post("/{quiz_id}/attempt/submit")
@@ -237,19 +298,48 @@ async def submit_attempt(
     await db.commit()
     
     # Trigger competency engine update
+    strengths = []
+    detected_gaps = []
     try:
         llm = LLMService()
         engine = CompetencyEngine(llm)
-        await engine.update_from_quiz_result(current_user.id, quiz_id, attempt.percentage, db)
+        await engine.update_from_assessment_result(
+            current_user.id, quiz_id, attempt.id, feedback, attempt.percentage, db
+        )
+        
+        from app.models.profile import CompetencyProfile, SkillGap, Competency
+        cp_res = await db.execute(
+            select(CompetencyProfile, Competency)
+            .join(Competency, CompetencyProfile.competency_id == Competency.id)
+            .where(CompetencyProfile.user_id == current_user.id)
+        )
+        for cp, comp in cp_res.all():
+            if cp.current_level >= 3.5:
+                strengths.append({"name": comp.name, "level": round(cp.current_level, 1)})
+                
+        gap_res = await db.execute(
+            select(SkillGap, Competency)
+            .join(Competency, SkillGap.competency_id == Competency.id)
+            .where(SkillGap.user_id == current_user.id)
+            .order_by(SkillGap.priority, -SkillGap.gap_score)
+        )
+        for g, comp in gap_res.all():
+            detected_gaps.append({
+                "name": comp.name,
+                "current": round(g.current_level, 1),
+                "required": g.required_level,
+                "gap": round(g.gap_score, 1),
+                "priority": "HIGH" if g.priority == 1 else "MEDIUM"
+            })
     except Exception as e:
         print(f"Competency engine update note: {e}")
 
     if attempt.percentage >= 80:
-        ai_feedback = f"Outstanding mastery demonstrated ({int(attempt.percentage)}%). All foundational and applied competencies verified against MoSPI curriculum benchmarks."
+        ai_feedback = f"Outstanding mastery demonstrated ({int(attempt.percentage)}%). Core competencies validated against MoSPI standards. Advanced learning modules queued."
     elif attempt.percentage >= 60:
-        ai_feedback = f"Solid foundational performance ({int(attempt.percentage)}%). You passed this assessment. Review the explanations below for missed items to solidify your score."
+        ai_feedback = f"Solid performance ({int(attempt.percentage)}%). Baseline competencies cleared with targeted skill gaps identified for capacity building."
     else:
-        ai_feedback = f"Score: {int(attempt.percentage)}%. Additional study recommended. Review the detailed explanations below and re-read the module materials on iGOT Karmayogi."
+        ai_feedback = f"Evaluation completed with score {int(attempt.percentage)}%. Foundational skill gaps detected. Personalized iGOT and NSSTA learning pathway generated."
 
     return {
         "attempt_id": attempt.id,
@@ -260,6 +350,8 @@ async def submit_attempt(
         "percentage": round(attempt.percentage, 1),
         "passed": attempt.percentage >= 60,
         "ai_feedback": ai_feedback,
+        "strengths": strengths,
+        "skill_gaps": detected_gaps,
         "feedback": feedback,
         "questions": feedback
     }

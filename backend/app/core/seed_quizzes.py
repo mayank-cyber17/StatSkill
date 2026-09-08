@@ -5,6 +5,116 @@ from app.models.user import User
 
 OFFICIAL_QUIZZES = [
     {
+        "course_code": "ONBOARDING",
+        "title": "MoSPI Official Baseline Competency & Skill Assessment",
+        "description": "Comprehensive initial competency evaluation for newly registered statistical personnel across Functional Statistics, Survey Sampling, Microdata Processing, Programming, and Data Governance.",
+        "difficulty_level": "INTERMEDIATE",
+        "target_role": "All Statistical Cadres",
+        "domain": "Comprehensive Official Statistics",
+        "questions": [
+            {
+                "question_text": "In survey sampling methodology, how does positive intra-cluster correlation (roh) affect the Design Effect (DEFF) in multi-stage stratified cluster sampling?",
+                "option_a": "It reduces DEFF below 1.0, making cluster sampling more efficient than SRS",
+                "option_b": "It increases DEFF above 1.0, meaning standard errors calculated under SRS assumptions underestimate true variance",
+                "option_c": "It has zero impact on variance or confidence interval widths",
+                "option_d": "It causes all standard errors to automatically collapse to zero",
+                "correct_option": "B",
+                "explanation": "Cluster sampling clusters elements that resemble each other. Positive intra-cluster correlation increases DEFF > 1; assuming SRS underestimates variance and produces overly narrow confidence intervals.",
+                "bloom_level": "ANALYZE"
+            },
+            {
+                "question_text": "When performing stratified sample survey aggregation in Python/Pandas, what is the best practice for applying household sampling weights to item expenditures?",
+                "option_a": "Iterating rows using for index, row in df.iterrows()",
+                "option_b": "Direct vectorized multiplication using df['expenditure'] * df['weight']",
+                "option_c": "Exporting data to CSV and computing products in a text editor",
+                "option_d": "Applying unweighted arithmetic mean directly without multiplier adjustments",
+                "correct_option": "B",
+                "explanation": "Vectorized column multiplication utilizes underlying C-level SIMD operations in NumPy/Pandas, ensuring mathematical accuracy and optimal execution performance.",
+                "bloom_level": "APPLY"
+            },
+            {
+                "question_text": "In official National Sample Survey (NSS) unit-level microdata, how should special missing data codes (such as '9999' or '99999') be treated prior to statistical estimation?",
+                "option_a": "Treated as valid large expenditures to preserve data size",
+                "option_b": "Converted to NaN / null and handled via validated imputation or non-response adjustments",
+                "option_c": "Multiplied by zero and retained in numerical mean calculations",
+                "option_d": "Left as valid integers since standard statistical software ignores four-digit numbers",
+                "correct_option": "B",
+                "explanation": "Microdata use special numeric codes (e.g., 9999) to indicate missingness or refusal. Leaving them in numerical columns catastrophically biases aggregates upward.",
+                "bloom_level": "ANALYZE"
+            },
+            {
+                "question_text": "What is the formula for the Modified Laspeyres Price Index used in official Consumer Price Index (CPI) calculations?",
+                "option_a": "sum(P_t * Q_t) / sum(P_0 * Q_0) * 100",
+                "option_b": "sum(P_t * Q_0) / sum(P_0 * Q_0) * 100",
+                "option_c": "sum(P_0 * Q_t) / sum(P_t * Q_0) * 100",
+                "option_d": "sqrt(sum(P_t * Q_0) * sum(P_t * Q_t))",
+                "correct_option": "B",
+                "explanation": "The Laspeyres formula uses base period quantity weights Q_0 to measure pure price movements: sum(P_t * Q_0) / sum(P_0 * Q_0) * 100.",
+                "bloom_level": "REMEMBER"
+            },
+            {
+                "question_text": "In relational database management for official surveys, which SQL join preserves all sampled households even if corresponding individual member records are missing?",
+                "option_a": "INNER JOIN",
+                "option_b": "LEFT OUTER JOIN",
+                "option_c": "CROSS JOIN",
+                "option_d": "RIGHT EXCLUSIVE JOIN",
+                "correct_option": "B",
+                "explanation": "A LEFT OUTER JOIN retains all rows from the primary household frame table, matching member records where available and leaving NULL where absent.",
+                "bloom_level": "UNDERSTAND"
+            },
+            {
+                "question_text": "Under the Digital Personal Data Protection (DPDP) Act and official statistics guidelines, how must identifiable survey respondent data be protected prior to public dissemination?",
+                "option_a": "By releasing direct names and contact numbers in supplementary appendices",
+                "option_b": "By applying statistical anonymization, pseudo-anonymization, and k-anonymity masking to microdata records",
+                "option_c": "By storing unencrypted respondent records on public FTP servers",
+                "option_d": "No protection is necessary for government survey records",
+                "correct_option": "B",
+                "explanation": "Data protection frameworks mandate rigorous de-identification, masking, and privacy-preserving transformations before public research access.",
+                "bloom_level": "APPLY"
+            },
+            {
+                "question_text": "Which Python library is specifically designed to compute survey-weighted descriptive statistics, weighted t-tests, and confidence intervals for complex survey designs?",
+                "option_a": "statsmodels (weightstats module)",
+                "option_b": "flask",
+                "option_c": "tkinter",
+                "option_d": "beautifulsoup4",
+                "correct_option": "A",
+                "explanation": "statsmodels.stats.weightstats provides DescrStatsW which incorporates sampling multiplier weights for means, variances, and hypothesis testing.",
+                "bloom_level": "UNDERSTAND"
+            },
+            {
+                "question_text": "In statistical machine learning for official census classification, what metric is most appropriate for assessing model performance on heavily imbalanced occupation categories?",
+                "option_a": "Raw overall accuracy",
+                "option_b": "Macro-averaged F1-Score or Balanced Accuracy",
+                "option_c": "Sum of squared errors",
+                "option_d": "Total count of training epochs",
+                "correct_option": "B",
+                "explanation": "In skewed distributions, overall accuracy is misleading because a naive majority classifier can score 95%+ while missing rare occupations. Macro F1 treats all classes with equal weighting.",
+                "bloom_level": "EVALUATE"
+            },
+            {
+                "question_text": "When presenting statistical estimates in official MoSPI reports, why must sampling errors (Relative Standard Error / Coefficient of Variation) be reported alongside point estimates?",
+                "option_a": "To satisfy arbitrary formatting requirements with no analytical purpose",
+                "option_b": "To communicate estimate precision and establish whether findings are statistically reliable for policy decisions",
+                "option_c": "Because RSE values guarantee that the point estimate is 100% free of non-sampling errors",
+                "option_d": "To increase page count in official publications",
+                "correct_option": "B",
+                "explanation": "Reporting CV/RSE informs policy makers of the reliability and confidence bounds of survey indicators, guarding against misinterpreting sampling noise.",
+                "bloom_level": "UNDERSTAND"
+            },
+            {
+                "question_text": "In a 2-stage stratified sample survey, if the sample size in a primary stratum is doubled while maintaining cluster allocations, how does the standard error of the mean scale under SRS within strata?",
+                "option_a": "It increases by 200%",
+                "option_b": "It decreases by a factor of 1 / sqrt(2) (approx. 29.3% reduction)",
+                "option_c": "It doubles in magnitude",
+                "option_d": "It drops immediately to exactly 0",
+                "correct_option": "B",
+                "explanation": "Standard error of the sample mean scales inversely with the square root of sample size (sigma / sqrt(n)). Doubling n reduces SE by a factor of 1 / sqrt(2).",
+                "bloom_level": "APPLY"
+            }
+        ]
+    },
+    {
         "course_code": "IGOT001",
         "title": "Python for Statistical Analysis & Survey Data Processing",
         "description": "Comprehensive competency assessment for iGOT001 covering Pandas, NumPy, survey weights, Laspeyres price calculation, and survey error metrics.",

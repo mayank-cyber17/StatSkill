@@ -3,7 +3,7 @@ from typing import Optional, List
 from datetime import datetime
 
 class OfficialProfileBase(BaseModel):
-    employee_id: str
+    employee_id: Optional[str] = None
     designation: str
     department: str
     organization: str
@@ -32,6 +32,7 @@ class OfficialProfileUpdate(BaseModel):
 class OfficialProfileResponse(OfficialProfileBase):
     id: int
     user_id: int
+    full_name: Optional[str] = None
     created_at: datetime
     updated_at: datetime
     model_config = {"from_attributes": True}

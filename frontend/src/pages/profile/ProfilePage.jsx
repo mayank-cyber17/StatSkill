@@ -20,32 +20,33 @@ export default function ProfilePage() {
     queryFn: profileAPI.getCompetency,
   })
 
-  const profile = profileRes?.data || {
-    full_name: user?.full_name || 'Rajesh Kumar',
-    designation: 'Junior Statistical Officer (JSO)',
-    department: 'NSSO (Field Operations Division)',
-    organization: 'Ministry of Statistics and Programme Implementation',
-    state: 'New Delhi / Central HQ',
-    years_experience: 4,
-    educational_qualification: "Master's in Statistics",
+  const profile = {
+    full_name: profileRes?.data?.full_name || user?.full_name || 'Statistical Official',
+    designation: profileRes?.data?.designation || 'Junior Statistical Officer (JSO)',
+    department: profileRes?.data?.department || 'NSSO (Field Operations Division)',
+    organization: profileRes?.data?.organization || 'Ministry of Statistics and Programme Implementation',
+    state: profileRes?.data?.state || 'New Delhi / Central HQ',
+    years_experience: profileRes?.data?.years_experience !== undefined ? profileRes.data.years_experience : 4,
+    educational_qualification: profileRes?.data?.educational_qualification || "Master's in Statistics",
+    employee_id: profileRes?.data?.employee_id || `MOSPI-2025-${user?.id || '001'}`
   }
 
-  const competencies = compRes?.data?.competencies || [
-    { name: 'Survey Design & Sampling', domain: 'Statistical', level: 4.0, method: 'AI_INFERRED' },
-    { name: 'National Accounts Statistics', domain: 'Statistical', level: 3.5, method: 'AI_INFERRED' },
-    { name: 'Consumer Price Index (CPI)', domain: 'Statistical', level: 3.0, method: 'AI_INFERRED' },
-    { name: 'Python for Data Analysis', domain: 'Technical', level: 2.0, method: 'QUIZ_DERIVED' },
-    { name: 'R Programming & Econometrics', domain: 'Technical', level: 1.5, method: 'SELF_DECLARED' },
-    { name: 'SQL for Government Databases', domain: 'Technical', level: 2.5, method: 'AI_INFERRED' },
-    { name: 'GIS & Spatial Analytics', domain: 'Technical', level: 1.5, method: 'AI_INFERRED' },
-    { name: 'Machine Learning Fundamentals', domain: 'Technical', level: 1.0, method: 'AI_INFERRED' },
-    { name: 'Cybersecurity Guidelines', domain: 'Digital Governance', level: 3.5, method: 'AI_INFERRED' },
-    { name: 'Data Privacy & DPDP Act', domain: 'Digital Governance', level: 4.0, method: 'AI_INFERRED' },
-    { name: 'Technical Report Writing', domain: 'Behavioral', level: 4.5, method: 'TRAINER_ASSESSED' },
-    { name: 'Team Leadership & Supervision', domain: 'Behavioral', level: 3.5, method: 'AI_INFERRED' },
-  ]
+  const rawComps = compRes?.data?.competencies || (Array.isArray(compRes?.data) ? compRes.data : null)
+  const competencies = (rawComps && rawComps.length > 0)
+    ? rawComps
+    : [
+        { name: 'Statistical Theory & Methods', domain: 'Statistical Competencies', level: 3.5, method: 'AI_INFERRED' },
+        { name: 'Survey Design & Sampling', domain: 'Statistical Competencies', level: 3.8, method: 'AI_INFERRED' },
+        { name: 'Data Analysis & Inference', domain: 'Statistical Competencies', level: 3.5, method: 'AI_INFERRED' },
+        { name: 'Statistical Software Proficiency', domain: 'Digital & Technology', level: 2.2, method: 'AI_INFERRED' },
+        { name: 'Data Quality Management', domain: 'Data Management', level: 2.5, method: 'AI_INFERRED' },
+        { name: 'Database Management', domain: 'Data Management', level: 2.5, method: 'AI_INFERRED' },
+        { name: 'Digital Governance & e-Services', domain: 'Digital & Technology', level: 3.2, method: 'AI_INFERRED' },
+        { name: 'Statistical Laws & Regulations', domain: 'Policy & Governance', level: 3.2, method: 'AI_INFERRED' },
+        { name: 'Statistical Report Writing', domain: 'Communication & Dissemination', level: 3.0, method: 'AI_INFERRED' },
+      ]
 
-  const domains = ['Statistical', 'Technical', 'Digital Governance', 'Behavioral']
+  const domains = ['Statistical', 'Data Management', 'Digital', 'Policy', 'Communication', 'Leadership']
 
   return (
     <div className="space-y-8">

@@ -1,21 +1,30 @@
 import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { analyticsAPI } from '../../services/api'
 import { BarChart3, TrendingUp, Award, Clock, BookOpen } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 
 export default function AnalyticsPage() {
-  const compProgressData = [
-    { month: 'Jan', Statistical: 3.2, Technical: 1.5, Governance: 3.0 },
-    { month: 'Feb', Statistical: 3.4, Technical: 1.8, Governance: 3.2 },
-    { month: 'Mar', Statistical: 3.5, Technical: 2.0, Governance: 3.5 },
-    { month: 'Apr', Statistical: 3.8, Technical: 2.5, Governance: 3.8 },
+  const { data: analyticsRes } = useQuery({
+    queryKey: ['personal-analytics'],
+    queryFn: analyticsAPI.getPersonal,
+  })
+
+  const compProgressData = analyticsRes?.data?.comp_progress || [
+    { month: 'Baseline', Statistical: 3.2, Technical: 2.0, Governance: 3.0 },
+    { month: 'Current Assessed', Statistical: 3.8, Technical: 2.5, Governance: 3.5 },
   ]
 
-  const quizScoresData = [
-    { quiz: 'Survey Sampling', score: 80 },
-    { quiz: 'Python Data Analysis', score: 67 },
+  const quizScoresData = analyticsRes?.data?.quiz_scores || [
+    { quiz: 'Baseline Assessment', score: 80 },
+    { quiz: 'Python Data Analysis', score: 75 },
     { quiz: 'CPI Indexing', score: 85 },
-    { quiz: 'Cybersecurity', score: 90 },
   ]
+
+  const learningHours = analyticsRes?.data?.learning_hours !== undefined ? analyticsRes.data.learning_hours : 12.0
+  const coursesDone = analyticsRes?.data?.courses_completed !== undefined ? analyticsRes.data.courses_completed : 1
+  const avgQuizScore = analyticsRes?.data?.quiz_stats?.avg_score !== undefined ? analyticsRes.data.quiz_stats.avg_score : 80.0
+  const totalQuizzes = analyticsRes?.data?.quiz_stats?.total_taken !== undefined ? analyticsRes.data.quiz_stats.total_taken : 1
 
   return (
     <div className="space-y-8">
@@ -31,26 +40,26 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="stat-card">
           <span className="stat-label">Learning Hours</span>
-          <div className="stat-value">36.5 <span className="text-xs font-normal text-slate-400">Hrs</span></div>
-          <div className="stat-change text-emerald-400">+12 Hrs this month</div>
+          <div className="stat-value">{learningHours} <span className="text-xs font-normal text-slate-400">Hrs</span></div>
+          <div className="stat-change text-emerald-400">Grounded curriculum</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Courses Completed</span>
-          <div className="stat-value text-brand-400">2</div>
-          <div className="stat-change text-slate-400">iGOT Karmayogi</div>
+          <div className="stat-value text-brand-400">{coursesDone}</div>
+          <div className="stat-change text-slate-400">iGOT / NSSTA modules</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Quiz Avg Score</span>
-          <div className="stat-value text-accent-400">80.5%</div>
-          <div className="stat-change text-emerald-400">Above MoSPI Avg</div>
+          <div className="stat-value text-accent-400">{avgQuizScore}%</div>
+          <div className="stat-change text-emerald-400">{totalQuizzes} Assessment(s)</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Skill Upgrades</span>
           <div className="stat-value text-purple-400">+3</div>
-          <div className="stat-change text-purple-300">Levels increased</div>
+          <div className="stat-change text-purple-300">Levels calibrated</div>
         </div>
       </div>
 

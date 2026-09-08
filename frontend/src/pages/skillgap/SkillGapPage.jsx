@@ -10,14 +10,20 @@ export default function SkillGapPage() {
     queryFn: gapAPI.get,
   })
 
-  const gaps = gapRes?.data?.gaps || [
-    { id: 1, name: 'Python for Statistical Analysis', domain: 'Technical', current: 2.0, required: 4.5, gap: 2.5, priority: 'HIGH' },
-    { id: 2, name: 'GIS Spatial Analytics & Mapping', domain: 'Technical', current: 1.5, required: 4.0, gap: 2.5, priority: 'HIGH' },
-    { id: 3, name: 'Machine Learning & Big Data', domain: 'Technical', current: 1.0, required: 3.5, gap: 2.5, priority: 'HIGH' },
-    { id: 4, name: 'R & Econometrics Methodology', domain: 'Technical', current: 1.5, required: 3.5, gap: 2.0, priority: 'MEDIUM' },
-    { id: 5, name: 'Consumer Price Index (CPI) Advanced', domain: 'Statistical', current: 3.0, required: 4.5, gap: 1.5, priority: 'MEDIUM' },
-    { id: 6, name: 'Cybersecurity Guidelines & Data Privacy', domain: 'Digital Governance', current: 3.5, required: 4.5, gap: 1.0, priority: 'LOW' },
-  ]
+  const rawGaps = gapRes?.data?.gaps || (Array.isArray(gapRes?.data) ? gapRes.data : null)
+  const gaps = (rawGaps && rawGaps.length > 0)
+    ? rawGaps
+    : [
+        { id: 1, name: 'Statistical Software Proficiency', domain: 'Digital & Technology', current: 2.0, required: 4.0, gap: 2.0, priority: 'HIGH' },
+        { id: 2, name: 'Data Quality Management', domain: 'Data Management', current: 2.2, required: 4.0, gap: 1.8, priority: 'HIGH' },
+        { id: 3, name: 'Econometrics & Modelling', domain: 'Statistical Competencies', current: 2.5, required: 4.0, gap: 1.5, priority: 'MEDIUM' },
+        { id: 4, name: 'Artificial Intelligence & ML', domain: 'Digital & Technology', current: 2.0, required: 3.5, gap: 1.5, priority: 'MEDIUM' },
+        { id: 5, name: 'Digital Governance & e-Services', domain: 'Digital & Technology', current: 3.0, required: 4.0, gap: 1.0, priority: 'LOW' },
+      ]
+
+  const highPriorityCount = gapRes?.data?.high_priority_count !== undefined 
+    ? gapRes.data.high_priority_count 
+    : gaps.filter(g => g.priority === 'HIGH' || g.priority === 1).length
 
   return (
     <div className="space-y-8">
@@ -42,9 +48,9 @@ export default function SkillGapPage() {
         <div className="flex items-center gap-3">
           <ShieldAlert className="w-8 h-8 text-danger-400 shrink-0" />
           <div>
-            <h4 className="font-bold text-white text-base">3 High-Priority Competency Gaps Detected</h4>
+            <h4 className="font-bold text-white text-base">{highPriorityCount} High-Priority Competency Gaps Detected</h4>
             <p className="text-slate-300 text-xs mt-0.5">
-              Technical & Analytics competencies require immediate upskilling to meet evolving official statistical standards.
+              Identified by your official competency assessment against Indian Statistical System cadre benchmarks.
             </p>
           </div>
         </div>

@@ -32,34 +32,79 @@ export default function DashboardPage() {
     queryFn: quizAPI.getHistory,
   })
 
-  // Format radar data
-  const radarData = compRes?.data?.domains || [
-    { domain: 'Statistical Methods', level: 3.8 },
-    { domain: 'Technical & Analytics', level: 2.2 },
-    { domain: 'Digital Governance', level: 3.5 },
-    { domain: 'Behavioral & Mgmt', level: 4.0 },
-  ]
+  // Format real radar data
+  const radarData = (compRes?.data?.domains && compRes.data.domains.length > 0)
+    ? compRes.data.domains
+    : [
+        { domain: 'Statistical Competencies', level: 3.5 },
+        { domain: 'Data Management', level: 3.0 },
+        { domain: 'Digital & Technology', level: 2.5 },
+        { domain: 'Policy & Governance', level: 3.2 },
+      ]
 
-  const formattedRadar = radarData.map(d => ({
+  const formattedRadar = radarData.map((d) => ({
     subject: d.domain || d.name,
-    A: d.level || d.score || 3.0,
+    A: d.level !== undefined ? d.level : (d.score !== undefined ? d.score : 3.0),
     fullMark: 5,
   }))
 
-  const gaps = gapRes?.data?.gaps || [
-    { name: 'Python for Data Analysis', current: 2.0, required: 4.0, priority: 1, domain: 'Technical' },
-    { name: 'GIS Spatial Analytics', current: 1.5, required: 4.0, priority: 2, domain: 'Technical' },
-    { name: 'Consumer Price Index (CPI)', current: 3.0, required: 5.0, priority: 3, domain: 'Statistical' },
-  ]
+  const rawGaps = gapRes?.data?.gaps || (Array.isArray(gapRes?.data) ? gapRes.data : null)
+  const gaps = (rawGaps && rawGaps.length > 0)
+    ? rawGaps
+    : [
+        { name: 'Statistical Software Proficiency', current: 2.0, required: 4.0, priority: 1, domain: 'Digital & Technology' },
+        { name: 'Data Quality Management', current: 2.2, required: 4.0, priority: 1, domain: 'Data Management' },
+        { name: 'Econometrics & Modelling', current: 2.5, required: 4.0, priority: 2, domain: 'Statistical' },
+      ]
 
-  const learningItems = pathRes?.data?.items || [
-    { id: 1, title: 'Python for Statistical Analysis', type: 'IGOT_COURSE', estHours: 12, status: 'IN_PROGRESS' },
-    { id: 2, title: 'GIS for Statistical Officers', type: 'NSSTA_TRAINING', estHours: 24, status: 'PENDING' },
-    { id: 3, title: 'National Accounts Basics Quiz', type: 'QUIZ', estHours: 1, status: 'COMPLETED' },
-  ]
+  const rawItems = pathRes?.data?.items || (Array.isArray(pathRes?.data) ? pathRes.data : null)
+  const learningItems = (rawItems && rawItems.length > 0)
+    ? rawItems.map((item) => ({
+        id: item.id,
+        title: item.item_title || item.title || 'Official Curriculum Module',
+        type: item.item_type || item.type || 'IGOT_COURSE',
+        estHours: item.estimated_hours || item.estHours || 10,
+        status: item.status || 'PENDING'
+      }))
+    : [
+        { id: 1, title: 'Python for Statistical Analysis & Survey Data Processing', type: 'IGOT_COURSE', estHours: 12, status: 'IN_PROGRESS' },
+        { id: 2, title: 'Advanced Survey Sampling & NSSO Multi-Stage Methodologies', type: 'NSSTA_TRAINING', estHours: 24, status: 'PENDING' },
+        { id: 3, title: 'Consumer Price Index (CPI) Weighting & Laspeyres Formula', type: 'IGOT_COURSE', estHours: 8, status: 'PENDING' },
+      ]
+
+  const attemptsList = Array.isArray(quizHistory?.data) ? quizHistory.data : []
+  const quizzesDone = attemptsList.filter((a) => a.status === 'COMPLETED').length
+  const avgQuizScore = quizzesDone > 0
+    ? Math.round(attemptsList.reduce((acc, a) => acc + (a.percentage || 0), 0) / quizzesDone)
+    : 0
+
+  const hasAssessed = compRes?.data?.competencies?.some((c) => c.method === 'ASSESSMENT_EVALUATED') || quizzesDone > 0
+  const avgLevel = compRes?.data?.average_level || 3.2
+  const pathwayProgress = pathRes?.data?.completion_percentage !== undefined
+    ? pathRes.data.completion_percentage
+    : (learningItems.length > 0 ? Math.round((learningItems.filter((i) => i.status === 'COMPLETED').length / learningItems.length) * 100) : 0)
 
   return (
     <div className="space-y-8">
+      {/* Onboarding Prompt if not yet assessed */}
+      {!hasAssessed && (
+        <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Sparkles className="w-8 h-8 text-amber-400 shrink-0" />
+            <div>
+              <h4 className="font-bold text-white text-base">Baseline Competency Assessment Required</h4>
+              <p className="text-slate-300 text-xs mt-0.5">
+                Complete your official 10-question evaluation to unlock your personalized radar matrix, skill gaps, and learning pathway.
+              </p>
+            </div>
+          </div>
+
+          <Link to="/assessment" className="btn btn-primary text-xs whitespace-nowrap shadow-glow">
+            Take Assessment Now <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
       {/* Welcome Banner */}
       <div className="card bg-gradient-brand p-8 text-white relative overflow-hidden shadow-glow">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
@@ -69,17 +114,25 @@ export default function DashboardPage() {
               <Sparkles className="w-3.5 h-3.5" /> Official Competency Portal
             </div>
             <h1 className="text-3xl font-display font-extrabold mb-2">
-              Welcome Back, {user?.full_name || 'Official'}!
+              Welcome, {user?.full_name || 'Statistical Official'}!
             </h1>
             <p className="text-white/80 text-sm max-w-xl">
-              Your competency profile is active. You have 3 critical skill gaps identified and 4 recommended learning pathway modules queued.
+              {hasAssessed
+                ? `Your competency profile is active. You have ${gaps.length} active skill gaps identified and ${learningItems.length} customized learning pathway modules queued.`
+                : 'Your official account is active. Complete your baseline assessment to calibrate your official skills and customize your training pathway.'}
             </p>
           </div>
 
           <div className="flex gap-3">
-            <Link to="/learning-path" className="btn bg-white text-brand-700 hover:bg-slate-100 font-bold text-sm shadow-lg">
-              Continue Learning Pathway <ArrowRight className="w-4 h-4" />
-            </Link>
+            {hasAssessed ? (
+              <Link to="/learning-path" className="btn bg-white text-brand-700 hover:bg-slate-100 font-bold text-sm shadow-lg">
+                Continue Learning Pathway <ArrowRight className="w-4 h-4" />
+              </Link>
+            ) : (
+              <Link to="/assessment" className="btn bg-white text-brand-700 hover:bg-slate-100 font-bold text-sm shadow-lg">
+                Start Baseline Assessment <ArrowRight className="w-4 h-4" />
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -91,8 +144,8 @@ export default function DashboardPage() {
             <span className="stat-label">Avg Competency Level</span>
             <Brain className="w-5 h-5 text-brand-400" />
           </div>
-          <div className="stat-value">3.4 <span className="text-xs font-normal text-slate-400">/ 5.0</span></div>
-          <div className="stat-change text-emerald-400">Assessed by StatIQ AI</div>
+          <div className="stat-value">{avgLevel} <span className="text-xs font-normal text-slate-400">/ 5.0</span></div>
+          <div className="stat-change text-emerald-400">{hasAssessed ? 'Calibrated by StatIQ AI' : 'Baseline initial'}</div>
         </div>
 
         <div className="stat-card">
@@ -101,7 +154,7 @@ export default function DashboardPage() {
             <Target className="w-5 h-5 text-amber-400" />
           </div>
           <div className="stat-value text-amber-400">{gaps.length}</div>
-          <div className="stat-change text-slate-400">High priority gaps</div>
+          <div className="stat-change text-slate-400">MoSPI role benchmarks</div>
         </div>
 
         <div className="stat-card">
@@ -109,8 +162,8 @@ export default function DashboardPage() {
             <span className="stat-label">Pathway Progress</span>
             <Map className="w-5 h-5 text-purple-400" />
           </div>
-          <div className="stat-value text-purple-400">35%</div>
-          <div className="stat-change text-purple-300">2 / 5 Modules done</div>
+          <div className="stat-value text-purple-400">{pathwayProgress}%</div>
+          <div className="stat-change text-purple-300">Targeted modules</div>
         </div>
 
         <div className="stat-card">
@@ -118,8 +171,8 @@ export default function DashboardPage() {
             <span className="stat-label">Quizzes Completed</span>
             <FileQuestion className="w-5 h-5 text-emerald-400" />
           </div>
-          <div className="stat-value text-emerald-400">{quizHistory?.data?.length || 4}</div>
-          <div className="stat-change text-emerald-400">Avg score: 85%</div>
+          <div className="stat-value text-emerald-400">{quizzesDone}</div>
+          <div className="stat-change text-emerald-400">{quizzesDone > 0 ? `Avg score: ${avgQuizScore}%` : 'Evaluation pending'}</div>
         </div>
       </div>
 
