@@ -3,9 +3,10 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { 
   BookOpen, ArrowLeft, CheckCircle2, PlayCircle, Clock, Award, 
   Sparkles, Code2, FileText, MessageSquare, ChevronRight, Check,
-  RotateCcw, ExternalLink, HelpCircle, Send, Play, Pause, Volume2, Maximize2
+  RotateCcw, ExternalLink, HelpCircle, Send, Play
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import LearningVideo from '../../components/common/LearningVideo'
 
 const COURSE_DATA = {
   'IGOT001': {
@@ -279,7 +280,6 @@ export default function CourseStudyPage() {
   const [activeLessonIndex, setActiveLessonIndex] = useState(0)
   const [completedLessons, setCompletedLessons] = useState({ L1: true })
   const [activeTab, setActiveTab] = useState('notes') // 'notes' | 'code' | 'tutor'
-  const [isPlaying, setIsPlaying] = useState(false)
   const [tutorQuery, setTutorQuery] = useState('')
   const [tutorMessages, setTutorMessages] = useState([
     { role: 'assistant', text: `Hello! I am your StatIQ AI Study Assistant for "${course.title}". Ask me any questions about formulas, Python code, or MoSPI statistical concepts in this lesson.` }
@@ -493,60 +493,12 @@ export default function CourseStudyPage() {
 
         {/* Right Column: Active Lesson Classroom (8 cols) */}
         <div className="lg:col-span-8 space-y-6">
-          {/* Simulated Video & Interactive Player Card */}
+          {/* Smart YouTube Video Player — dynamically fetches best educational video */}
           <div className="card overflow-hidden border border-white/10">
-            <div className="relative aspect-video bg-surface-950 flex flex-col justify-between p-6">
-              {/* Top Video Overlay */}
-              <div className="flex items-center justify-between z-10">
-                <div className="flex items-center gap-2 bg-surface-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-white font-medium">MoSPI Official Lecture Series</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-slate-400 bg-surface-900/80 px-2.5 py-1 rounded-lg">
-                  <span>1080p HD</span>
-                </div>
-              </div>
-
-              {/* Center Play Button & Title */}
-              <div className="text-center z-10 space-y-3 my-auto">
-                <button 
-                  onClick={() => {
-                    setIsPlaying(!isPlaying)
-                    toast(isPlaying ? 'Video paused' : 'Playing lecture stream...', { icon: isPlaying ? '⏸️' : '▶️' })
-                  }}
-                  className="w-16 h-16 rounded-full bg-brand-600/90 hover:bg-brand-500 text-white flex items-center justify-center mx-auto shadow-glow transition-transform hover:scale-105"
-                >
-                  {isPlaying ? <Pause className="w-7 h-7" /> : <Play className="w-7 h-7 ml-1" />}
-                </button>
-                <div className="text-sm font-semibold text-white drop-shadow-md">
-                  {activeLesson.title}
-                </div>
-                <div className="text-xs text-slate-400">
-                  Speaker: Faculty of National Statistical Systems Training Academy (NSSTA)
-                </div>
-              </div>
-
-              {/* Bottom Video Controls */}
-              <div className="space-y-2 z-10 bg-surface-900/80 backdrop-blur-md p-3 rounded-xl border border-white/10">
-                <div className="w-full h-1.5 bg-white/20 rounded-full cursor-pointer overflow-hidden">
-                  <div className="h-full bg-brand-500 rounded-full w-1/3" />
-                </div>
-                <div className="flex items-center justify-between text-xs text-slate-300">
-                  <div className="flex items-center gap-3">
-                    <button onClick={() => setIsPlaying(!isPlaying)} className="hover:text-white">
-                      {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    </button>
-                    <Volume2 className="w-4 h-4" />
-                    <span className="font-mono text-[11px]">12:45 / {activeLesson.duration}</span>
-                  </div>
-                  <Maximize2 className="w-4 h-4 cursor-pointer hover:text-white" />
-                </div>
-              </div>
-
-              {/* Video Backdrop Gradient / Pattern */}
-              <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-900/60 to-surface-950/80 pointer-events-none" />
-              <div className="absolute -top-12 -right-12 w-64 h-64 bg-brand-500/10 rounded-full blur-[80px] pointer-events-none" />
-            </div>
+            <LearningVideo
+              topic={course.title}
+              lessonTitle={activeLesson.title}
+            />
 
             {/* Lesson Tabs Header */}
             <div className="flex border-b border-white/10 bg-surface-800/60 text-xs">

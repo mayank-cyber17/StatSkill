@@ -132,18 +132,29 @@ def send_otp_email(to_email: str, otp: str, full_name: str) -> None:
 
     try:
         context = ssl.create_default_context()
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
-            server.ehlo()
-            server.starttls(context=context)
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-            server.sendmail(settings.SMTP_FROM, to_email, msg.as_string())
-    except smtplib.SMTPAuthenticationError:
+        if settings.SMTP_PORT == 465:
+            with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT, context=context, timeout=15) as server:
+                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+                server.sendmail(settings.SMTP_FROM, to_email, msg.as_string())
+        else:
+            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as server:
+                server.ehlo()
+                server.starttls(context=context)
+                server.ehlo()
+                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+                server.sendmail(settings.SMTP_FROM, to_email, msg.as_string())
+    except smtplib.SMTPAuthenticationError as e:
+        import logging
+        logging.getLogger("uvicorn").error(f"SMTP Authentication failed: {e}")
         raise HTTPException(
             status_code=503,
-            detail="Email authentication failed. Please contact the administrator."
+            detail="Email authentication failed. Please check SMTP_USER and SMTP_PASSWORD (for Gmail, make sure you are using a 16-character Google App Password)."
         )
-    except Exception:
+    except Exception as e:
+        import logging
+        logging.getLogger("uvicorn").error(f"Failed to send email to {to_email}: {e}")
         raise HTTPException(
             status_code=503,
-            detail="Failed to send OTP email. Please try again later."
+            detail=f"Failed to send email via SMTP: {str(e)}"
         )
+

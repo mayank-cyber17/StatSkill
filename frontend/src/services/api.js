@@ -131,3 +131,13 @@ export const adminAPI = {
   approveNomination: (id, data) => api.post(`/admin/nominations/${id}/approve`, data),
   getFrameworks: () => api.get('/admin/frameworks'),
 }
+
+// Learning Video — smart YouTube video discovery for AI course recommendations
+export const learningVideoAPI = {
+  /**
+   * Fetch the best educational YouTube video for a given course/topic.
+   * Backend handles YouTube API key — never exposed to frontend.
+   * @param {string} topic  - Course or topic name (e.g. "Python for Statistical Analysis")
+   */
+  getVideo: (topic) => api.get('/learning-video', { params: { topic } }),
+}

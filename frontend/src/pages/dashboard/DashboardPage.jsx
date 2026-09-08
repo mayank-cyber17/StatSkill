@@ -6,7 +6,7 @@ import {
   Brain, Target, Map, FileQuestion, BookOpen, GraduationCap, 
   ArrowRight, Award, CheckCircle2, Clock, Sparkles
 } from 'lucide-react'
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts'
 import { Link } from 'react-router-dom'
 
 export default function DashboardPage() {
@@ -37,21 +37,43 @@ export default function DashboardPage() {
     queryFn: quizAPI.getOnboardingStatus,
   })
 
-  // Format real radar data
-  const radarData = (compRes?.data?.domains && compRes.data.domains.length > 0)
-    ? compRes.data.domains
-    : [
-        { domain: 'Statistical Competencies', level: 3.5 },
-        { domain: 'Data Management', level: 3.0 },
-        { domain: 'Digital & Technology', level: 2.5 },
-        { domain: 'Policy & Governance', level: 3.2 },
-      ]
+  // Format 360° radar data across all 4 official statistics domains
+  const OFFICIAL_DOMAINS = [
+    'Statistical Competencies',
+    'Data Management',
+    'Digital & Technology',
+    'Policy & Governance',
+  ]
 
-  const formattedRadar = radarData.map((d) => ({
-    subject: d.domain || d.name,
-    A: d.level !== undefined ? d.level : (d.score !== undefined ? d.score : 3.0),
-    fullMark: 5,
-  }))
+  const domainScores = new Map()
+  if (compRes?.data?.domains && Array.isArray(compRes.data.domains)) {
+    compRes.data.domains.forEach((d) => {
+      const name = d.domain || d.name
+      if (name) {
+        domainScores.set(name.toLowerCase().trim(), d.level !== undefined ? d.level : (d.score !== undefined ? d.score : 3.0))
+      }
+    })
+  }
+
+  const defaultLevel = compRes?.data?.average_level ? Number(compRes.data.average_level) : 2.5
+
+  const formattedRadar = OFFICIAL_DOMAINS.map((domainName) => {
+    const key = domainName.toLowerCase().trim()
+    let score = domainScores.get(key)
+    if (score === undefined) {
+      for (const [k, val] of domainScores.entries()) {
+        if (k.includes(key) || key.includes(k)) {
+          score = val
+          break
+        }
+      }
+    }
+    return {
+      subject: domainName,
+      A: score !== undefined ? Number(score) : defaultLevel,
+      fullMark: 5,
+    }
+  })
 
   const rawGaps = gapRes?.data?.gaps || (Array.isArray(gapRes?.data) ? gapRes.data : null)
   const gaps = (rawGaps && rawGaps.length > 0)
@@ -210,6 +232,10 @@ export default function DashboardPage() {
                 <PolarGrid stroke="#ffffff20" />
                 <PolarAngleAxis dataKey="subject" stroke="#a5b4fc" tick={{ fill: '#cbd5e1', fontSize: 11 }} />
                 <PolarRadiusAxis angle={30} domain={[0, 5]} stroke="#ffffff30" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#16162a', borderColor: '#ffffff20', borderRadius: '0.75rem', color: '#fff', fontSize: '12px' }}
+                  formatter={(value) => [`${value} / 5.0`, 'Competency Level']}
+                />
                 <Radar name="Current Competency" dataKey="A" stroke="#6366f1" fill="#6366f1" fillOpacity={0.5} />
               </RadarChart>
             </ResponsiveContainer>

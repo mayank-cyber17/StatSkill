@@ -100,37 +100,40 @@ async def forgot_password(
 ):
     """
     Step 1 — Request a password reset OTP.
-    Always returns 200 (no user enumeration — never tell the caller if the
-    email exists or not).
     """
     result = await db.execute(select(User).where(User.email == body.email))
     user = result.scalar_one_or_none()
 
-    if user:
-        # Invalidate any previous unused OTPs for this email
-        prev_result = await db.execute(
-            select(PasswordResetOTP).where(
-                PasswordResetOTP.email == body.email,
-                PasswordResetOTP.is_used == False,
-            )
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="No account found with this email address. Please enter your registered email or create an account."
         )
-        for old_otp in prev_result.scalars().all():
-            old_otp.is_used = True
 
-        otp = _generate_otp()
-        otp_record = PasswordResetOTP(
-            user_id=user.id,
-            email=body.email,
-            otp_hash=_hash_otp(otp),
-            expires_at=datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRE_MINUTES),
+    # Invalidate any previous unused OTPs for this email
+    prev_result = await db.execute(
+        select(PasswordResetOTP).where(
+            PasswordResetOTP.email == body.email,
+            PasswordResetOTP.is_used == False,
         )
-        db.add(otp_record)
-        await db.commit()
+    )
+    for old_otp in prev_result.scalars().all():
+        old_otp.is_used = True
 
-        # Send email (raises HTTP 503 if SMTP is misconfigured)
-        send_otp_email(to_email=user.email, otp=otp, full_name=user.full_name)
+    otp = _generate_otp()
+    otp_record = PasswordResetOTP(
+        user_id=user.id,
+        email=body.email,
+        otp_hash=_hash_otp(otp),
+        expires_at=datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRE_MINUTES),
+    )
+    db.add(otp_record)
+    await db.commit()
 
-    return {"message": "If this email is registered, an OTP has been sent."}
+    # Send email (raises HTTP 503 if SMTP is misconfigured or fails)
+    send_otp_email(to_email=user.email, otp=otp, full_name=user.full_name)
+
+    return {"message": f"OTP has been sent to {body.email}. Please check your inbox."}
 
 
 @router.post("/resend-otp")
@@ -145,8 +148,11 @@ async def resend_otp(
     result = await db.execute(select(User).where(User.email == body.email))
     user = result.scalar_one_or_none()
     if not user:
-        # No user — return generic message to avoid enumeration
-        return {"message": "If this email is registered, a new OTP has been sent."}
+        raise HTTPException(
+            status_code=404,
+            detail="No account found with this email address."
+        )
+
 
     # Check cooldown: find most recent OTP for this email
     recent_result = await db.execute(

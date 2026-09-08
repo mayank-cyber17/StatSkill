@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authAPI } from '../../services/api'
+import ThemeToggle from '../../components/common/ThemeToggle'
 import toast from 'react-hot-toast'
 import {
   Brain, Mail, ArrowRight, ArrowLeft, Lock, CheckCircle,
@@ -33,11 +34,16 @@ function getPasswordStrength(pw) {
 // ── Shared card shell ──────────────────────────────────────────────────────────
 function CardShell({ children }) {
   return (
-    <div className="min-h-screen bg-surface-900 flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-brand-600/20 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-slate-100 dark:bg-surface-900 flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-200">
+      {/* Top-right theme toggle */}
+      <div className="absolute top-6 right-6 z-50">
+        <ThemeToggle />
+      </div>
 
-      <div className="w-full max-w-md rounded-3xl overflow-hidden border border-white/10 shadow-glow bg-surface-800/90 backdrop-blur-xl">
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-brand-500/15 dark:bg-brand-600/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-500/15 dark:bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="w-full max-w-md rounded-3xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-2xl bg-white dark:bg-surface-800/90 backdrop-blur-xl transition-colors duration-200">
         {/* Header */}
         <div className="p-6 bg-gradient-brand flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
@@ -45,7 +51,7 @@ function CardShell({ children }) {
           </div>
           <div>
             <p className="font-display font-bold text-white text-lg leading-tight">StatIQ</p>
-            <p className="text-white/70 text-xs">Password Recovery</p>
+            <p className="text-white/80 text-xs">Password Recovery</p>
           </div>
         </div>
 
@@ -93,26 +99,26 @@ function StepEmail({ onNext }) {
 
   return (
     <CardShell>
-      <Link to="/login" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white mb-6 transition-colors">
+      <Link to="/login" className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-6 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" /> Back to Login
       </Link>
 
-      <h3 className="text-xl font-display font-bold text-white mb-1">Forgot Password</h3>
-      <p className="text-xs text-slate-400 mb-6">
-        Enter your registered government email address. We'll send a 6-digit OTP to reset your password.
+      <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white mb-1">Forgot Password</h3>
+      <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
+        Enter your registered email address. We'll send a 6-digit OTP to reset your password.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="form-group">
           <label className="input-label text-xs">Registered Email Address</label>
           <div className="relative">
-            <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
+            <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 dark:text-slate-500" />
             <input
               type="email"
               required
               value={email}
               onChange={(e) => { setEmail(e.target.value); setError('') }}
-              placeholder="official@statiq.gov.in"
+              placeholder="your@gmail.com"
               className={`input pl-10 text-xs ${error ? 'border-red-500/60' : ''}`}
             />
           </div>
@@ -210,13 +216,13 @@ function StepOTP({ email, onNext, onBack }) {
 
   return (
     <CardShell>
-      <button onClick={onBack} className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white mb-6 transition-colors">
+      <button onClick={onBack} className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-6 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" /> Back
       </button>
 
-      <h3 className="text-xl font-display font-bold text-white mb-1">Enter OTP</h3>
-      <p className="text-xs text-slate-400 mb-2">
-        A 6-digit OTP was sent to <span className="text-brand-400 font-semibold">{email}</span>.
+      <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white mb-1">Enter OTP</h3>
+      <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
+        A 6-digit OTP was sent to <span className="text-brand-600 dark:text-brand-400 font-semibold">{email}</span>.
         It is valid for 10 minutes.
       </p>
 
@@ -233,10 +239,10 @@ function StepOTP({ email, onNext, onBack }) {
               value={d}
               onChange={(e) => handleDigitChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
-              className={`w-11 h-13 text-center text-lg font-bold rounded-xl border bg-surface-700/60 text-white outline-none transition-all
-                ${d ? 'border-brand-500 shadow-glow' : 'border-white/10'}
+              className={`w-11 text-center text-lg font-bold rounded-xl border bg-slate-100 dark:bg-surface-700/60 text-slate-900 dark:text-white outline-none transition-all
+                ${d ? 'border-brand-500 shadow-glow' : 'border-slate-300 dark:border-white/10'}
                 ${error ? 'border-red-500/60' : ''}
-                focus:border-brand-400 focus:ring-1 focus:ring-brand-400/30`}
+                focus:border-brand-500 focus:ring-1 focus:ring-brand-400/30`}
               style={{ height: '52px' }}
             />
           ))}
@@ -255,7 +261,7 @@ function StepOTP({ email, onNext, onBack }) {
             onClick={handleResend}
             disabled={cooldown > 0 || resending}
             className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-colors
-              ${cooldown > 0 ? 'text-slate-500 cursor-not-allowed' : 'text-brand-400 hover:text-brand-300'}`}
+              ${cooldown > 0 ? 'text-slate-400 cursor-not-allowed' : 'text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300'}`}
           >
             <RefreshCw className={`w-3.5 h-3.5 ${resending ? 'animate-spin' : ''}`} />
             {cooldown > 0 ? `Resend OTP in ${cooldown}s` : resending ? 'Resending…' : 'Resend OTP'}
@@ -301,14 +307,14 @@ function StepReset({ email, otp, onNext }) {
   return (
     <CardShell>
       <div className="mb-6">
-        <div className="inline-flex items-center gap-1.5 text-xs text-slate-400">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
           OTP verified — now set your new password
         </div>
       </div>
 
-      <h3 className="text-xl font-display font-bold text-white mb-1">Create New Password</h3>
-      <p className="text-xs text-slate-400 mb-6">
+      <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white mb-1">Create New Password</h3>
+      <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
         Choose a strong password. It must be at least 8 characters.
       </p>
 
@@ -317,7 +323,7 @@ function StepReset({ email, otp, onNext }) {
         <div className="form-group">
           <label className="input-label text-xs">New Password</label>
           <div className="relative">
-            <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
+            <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 dark:text-slate-500" />
             <input
               type={showNew ? 'text' : 'password'}
               required
@@ -329,7 +335,7 @@ function StepReset({ email, otp, onNext }) {
             <button
               type="button"
               onClick={() => setShowNew((v) => !v)}
-              className="absolute right-3.5 top-3.5 text-slate-400 hover:text-white transition-colors"
+              className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
             >
               {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -342,16 +348,16 @@ function StepReset({ email, otp, onNext }) {
                   <div
                     key={s}
                     className={`h-1 flex-1 rounded-full transition-all ${
-                      strength.score >= s ? strength.color : 'bg-white/10'
+                      strength.score >= s ? strength.color : 'bg-slate-200 dark:bg-white/10'
                     }`}
                   />
                 ))}
               </div>
               <p className={`text-[10px] font-semibold ${
-                strength.score <= 1 ? 'text-red-400'
-                : strength.score <= 2 ? 'text-amber-400'
-                : strength.score <= 3 ? 'text-yellow-300'
-                : 'text-emerald-400'
+                strength.score <= 1 ? 'text-red-500 dark:text-red-400'
+                : strength.score <= 2 ? 'text-amber-500 dark:text-amber-400'
+                : strength.score <= 3 ? 'text-yellow-600 dark:text-yellow-300'
+                : 'text-emerald-600 dark:text-emerald-400'
               }`}>
                 {strength.label}
               </p>
@@ -363,7 +369,7 @@ function StepReset({ email, otp, onNext }) {
         <div className="form-group">
           <label className="input-label text-xs">Confirm New Password</label>
           <div className="relative">
-            <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
+            <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 dark:text-slate-500" />
             <input
               type={showConfirm ? 'text' : 'password'}
               required
@@ -377,16 +383,16 @@ function StepReset({ email, otp, onNext }) {
             <button
               type="button"
               onClick={() => setShowConfirm((v) => !v)}
-              className="absolute right-3.5 top-3.5 text-slate-400 hover:text-white transition-colors"
+              className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
             >
               {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
           {confirmPassword && !passwordsMatch && (
-            <p className="text-[10px] text-red-400 mt-1">Passwords do not match.</p>
+            <p className="text-[10px] text-red-500 dark:text-red-400 mt-1">Passwords do not match.</p>
           )}
           {confirmPassword && passwordsMatch && (
-            <p className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1">
+            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1">
               <CheckCircle className="w-3 h-3" /> Passwords match
             </p>
           )}
@@ -416,10 +422,10 @@ function StepSuccess() {
     <CardShell>
       <div className="text-center py-4">
         <div className="w-20 h-20 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="w-10 h-10 text-emerald-400" />
+          <CheckCircle className="w-10 h-10 text-emerald-500 dark:text-emerald-400" />
         </div>
-        <h3 className="text-2xl font-display font-bold text-white mb-3">Password Reset!</h3>
-        <p className="text-sm text-slate-400 mb-2">
+        <h3 className="text-2xl font-display font-bold text-slate-900 dark:text-white mb-3">Password Reset!</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
           Your password has been updated successfully.
         </p>
         <p className="text-xs text-slate-500 mb-8">

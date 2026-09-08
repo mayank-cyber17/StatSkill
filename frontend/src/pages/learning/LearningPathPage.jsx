@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { learningPathAPI } from '../../services/api'
-import { Map, Clock, CheckCircle2, PlayCircle, Sparkles, BookOpen, GraduationCap, ArrowRight } from 'lucide-react'
+import { Map, Clock, CheckCircle2, PlayCircle, Sparkles, BookOpen, GraduationCap, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import LearningVideo from '../../components/common/LearningVideo'
 
 export default function LearningPathPage() {
+  const [expandedVideoId, setExpandedVideoId] = useState(null)
+
   const { data: pathRes, isLoading } = useQuery({
     queryKey: ['learning-path'],
     queryFn: learningPathAPI.get,
@@ -21,6 +24,9 @@ export default function LearningPathPage() {
       { id: 5, sequence_order: 5, item_type: 'NSSTA_TRAINING', item_title: 'National Accounts Statistics Masterclass (TPAC-2025-09)', estimated_hours: 30, status: 'PENDING', provider: 'NSSTA / IASRI' },
     ]
   }
+
+  /** Strip trailing course-code parenthetical, e.g. "(IGOT001)" */
+  const extractTopic = (title) => title.replace(/\s*\([^)]*\)\s*$/, '').trim()
 
   return (
     <div className="space-y-8">
@@ -59,6 +65,9 @@ export default function LearningPathPage() {
         {path.items.map((item, idx) => {
           const isDone = item.status === 'COMPLETED'
           const isInProgress = item.status === 'IN_PROGRESS'
+          const isIGOT = item.item_type === 'IGOT_COURSE'
+          const topic = extractTopic(item.item_title)
+          const isVideoOpen = expandedVideoId === item.id
 
           return (
             <div key={item.id} className="relative flex items-start gap-6 pl-2">
@@ -68,38 +77,64 @@ export default function LearningPathPage() {
               </div>
 
               {/* Module Card */}
-              <div className={`card-glow p-6 flex-1 space-y-3 ${isInProgress ? 'border-brand-500/50 bg-brand-500/5' : ''}`}>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className={`badge ${item.item_type === 'IGOT_COURSE' ? 'badge-brand' : item.item_type === 'NSSTA_TRAINING' ? 'badge-warn' : 'badge-success'}`}>
-                      {item.item_type === 'IGOT_COURSE' ? 'iGOT Karmayogi' : item.item_type === 'NSSTA_TRAINING' ? 'NSSTA TPAC' : 'AI Assessment'}
-                    </span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" /> {item.estimated_hours} Hours
+              <div className={`card-glow flex-1 space-y-0 overflow-hidden ${isInProgress ? 'border-brand-500/50 bg-brand-500/5' : ''}`}>
+                <div className="p-6 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className={`badge ${isIGOT ? 'badge-brand' : item.item_type === 'NSSTA_TRAINING' ? 'badge-warn' : 'badge-success'}`}>
+                        {isIGOT ? 'iGOT Karmayogi' : item.item_type === 'NSSTA_TRAINING' ? 'NSSTA TPAC' : 'AI Assessment'}
+                      </span>
+                      <span className="text-xs text-slate-400 flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" /> {item.estimated_hours} Hours
+                      </span>
+                    </div>
+                    <span className={`text-xs font-semibold ${isDone ? 'text-accent-400' : isInProgress ? 'text-brand-300' : 'text-slate-500'}`}>
+                      {item.status}
                     </span>
                   </div>
-                  <span className={`text-xs font-semibold ${isDone ? 'text-accent-400' : isInProgress ? 'text-brand-300' : 'text-slate-500'}`}>
-                    {item.status}
-                  </span>
+
+                  <h3 className="text-base font-bold text-white">{item.item_title}</h3>
+                  <p className="text-xs text-slate-400">Provider: {item.provider}</p>
+
+                  <div className="pt-2 flex flex-wrap items-center gap-2 justify-end">
+                    {/* Preview Video button — only for IGOT courses */}
+                    {isIGOT && (
+                      <button
+                        onClick={() => setExpandedVideoId(isVideoOpen ? null : item.id)}
+                        className="btn btn-ghost text-xs flex items-center gap-1.5 text-brand-300 hover:text-white border border-brand-500/20 py-1.5 px-3"
+                      >
+                        <PlayCircle className="w-3.5 h-3.5" />
+                        {isVideoOpen ? 'Hide Video' : 'Preview Video'}
+                        {isVideoOpen
+                          ? <ChevronUp className="w-3 h-3" />
+                          : <ChevronDown className="w-3 h-3" />}
+                      </button>
+                    )}
+
+                    <Link
+                      to={
+                        isIGOT
+                          ? '/learn/IGOT001'
+                          : item.item_type === 'NSSTA_TRAINING'
+                          ? '/nssta'
+                          : '/quizzes'
+                      }
+                      className={`btn text-xs ${isInProgress ? 'btn-primary' : 'btn-secondary'}`}
+                    >
+                      {isDone ? 'Review Module' : isInProgress ? 'Continue Learning' : 'Start Module'} <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
 
-                <h3 className="text-base font-bold text-white">{item.item_title}</h3>
-                <p className="text-xs text-slate-400">Provider: {item.provider}</p>
-
-                <div className="pt-2 flex justify-end">
-                  <Link 
-                    to={
-                      item.item_type === 'IGOT_COURSE' 
-                        ? '/learn/IGOT001' 
-                        : item.item_type === 'NSSTA_TRAINING' 
-                        ? '/nssta' 
-                        : '/quizzes'
-                    }
-                    className={`btn text-xs ${isInProgress ? 'btn-primary' : 'btn-secondary'}`}
-                  >
-                    {isDone ? 'Review Module' : isInProgress ? 'Continue Learning' : 'Start Module'} <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+                {/* Collapsible inline video preview */}
+                {isIGOT && isVideoOpen && (
+                  <div className="border-t border-white/10">
+                    <LearningVideo
+                      topic={topic}
+                      lessonTitle={item.item_title}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )

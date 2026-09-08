@@ -35,12 +35,20 @@ export default {
           500: '#ef4444',
         },
         surface: {
+          950: '#07070f',
           900: '#0f0f1a',
           800: '#16162a',
           700: '#1e1e35',
           600: '#252540',
           500: '#2d2d50',
-        }
+        },
+        // Light mode surface equivalents
+        light: {
+          50:  '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -62,6 +70,7 @@ export default {
         'pulse-slow': 'pulse 3s ease-in-out infinite',
         'shimmer': 'shimmer 1.5s infinite',
         'float': 'float 3s ease-in-out infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       keyframes: {
         fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },

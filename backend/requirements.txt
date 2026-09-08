@@ -15,3 +15,5 @@ tiktoken
 PyMuPDF
 aiofiles
 email-validator
+httpx
+cachetools

@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authAPI } from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
+import ThemeToggle from '../../components/common/ThemeToggle'
 import toast from 'react-hot-toast'
 import { Brain, Lock, Mail, ArrowRight, UserCheck, Shield, Award, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState('LEARNER')
-  const [email, setEmail] = useState('learner@statiq.gov.in')
+  const [email, setEmail] = useState('cybermayank17@gmail.com')
   const [password, setPassword] = useState('Demo@1234')
   const [loading, setLoading] = useState(false)
   const [loginError, setLoginError] = useState('')
@@ -15,13 +16,12 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const setAuth = useAuthStore((state) => state.setAuth)
 
-
   const handleRoleSelect = (role) => {
     setSelectedRole(role)
     setLoginError('')
     setShowForgotPassword(false)
     if (role === 'LEARNER') {
-      setEmail('learner@statiq.gov.in')
+      setEmail('cybermayank17@gmail.com')
       setPassword('Demo@1234')
     } else if (role === 'TRAINER') {
       setEmail('trainer@statiq.gov.in')
@@ -65,11 +65,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-900 flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-brand-600/20 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
+    <div className="min-h-screen bg-slate-100 dark:bg-surface-900 flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-200">
+      {/* Top right Theme Toggle */}
+      <div className="absolute top-6 right-6 z-50">
+        <ThemeToggle />
+      </div>
 
-      <div className="w-full max-w-4xl grid md:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-glow bg-surface-800/90 backdrop-blur-xl">
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-brand-500/15 dark:bg-brand-600/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-500/15 dark:bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="w-full max-w-4xl grid md:grid-cols-2 rounded-3xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-2xl bg-white/95 dark:bg-surface-800/90 backdrop-blur-xl transition-colors duration-200">
         {/* Left Side Info */}
         <div className="p-8 lg:p-12 bg-gradient-brand flex flex-col justify-between text-white relative">
           <div>
@@ -104,14 +109,18 @@ export default function LoginPage() {
         </div>
 
         {/* Right Side Form */}
-        <div className="p-8 lg:p-12 flex flex-col justify-between space-y-6">
+        <div className="p-8 lg:p-12 flex flex-col justify-between space-y-6 bg-white dark:bg-transparent">
           <div>
-            <h3 className="text-xl font-display font-bold text-white mb-1">Sign In to StatIQ</h3>
-            <p className="text-xs text-slate-400 mb-5">Select your role and enter registered government credentials</p>
+            <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white mb-1">
+              Sign In to StatIQ
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
+              Select your role and enter registered government credentials
+            </p>
 
             {/* Role Selection Option */}
             <div className="mb-5 space-y-1.5">
-              <label className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider block">
+              <label className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
                 Select Account Role:
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -120,13 +129,13 @@ export default function LoginPage() {
                   onClick={() => handleRoleSelect('LEARNER')}
                   className={`p-2.5 rounded-xl border text-center transition-all ${
                     selectedRole === 'LEARNER'
-                      ? 'bg-brand-500/20 border-brand-500 text-white shadow-glow'
-                      : 'bg-surface-700/40 border-white/5 text-slate-400 hover:text-white hover:bg-white/5'
+                      ? 'bg-brand-500/20 border-brand-500 text-brand-700 dark:text-white shadow-glow'
+                      : 'bg-slate-100 dark:bg-surface-700/40 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5'
                   }`}
                 >
-                  <UserCheck className={`w-4 h-4 mx-auto mb-1 ${selectedRole === 'LEARNER' ? 'text-brand-400' : 'text-slate-400'}`} />
+                  <UserCheck className={`w-4 h-4 mx-auto mb-1 ${selectedRole === 'LEARNER' ? 'text-brand-500 dark:text-brand-400' : 'text-slate-400'}`} />
                   <div className="text-xs font-bold">Learner</div>
-                  <div className="text-[9px] text-slate-400 truncate">Official</div>
+                  <div className="text-[9px] text-slate-500 dark:text-slate-400 truncate">Official</div>
                 </button>
 
                 <button
@@ -134,13 +143,13 @@ export default function LoginPage() {
                   onClick={() => handleRoleSelect('TRAINER')}
                   className={`p-2.5 rounded-xl border text-center transition-all ${
                     selectedRole === 'TRAINER'
-                      ? 'bg-purple-500/20 border-purple-500 text-white shadow-glow'
-                      : 'bg-surface-700/40 border-white/5 text-slate-400 hover:text-white hover:bg-white/5'
+                      ? 'bg-purple-500/20 border-purple-500 text-purple-700 dark:text-white shadow-glow'
+                      : 'bg-slate-100 dark:bg-surface-700/40 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5'
                   }`}
                 >
-                  <Award className={`w-4 h-4 mx-auto mb-1 ${selectedRole === 'TRAINER' ? 'text-purple-400' : 'text-slate-400'}`} />
+                  <Award className={`w-4 h-4 mx-auto mb-1 ${selectedRole === 'TRAINER' ? 'text-purple-500 dark:text-purple-400' : 'text-slate-400'}`} />
                   <div className="text-xs font-bold">Trainer</div>
-                  <div className="text-[9px] text-slate-400 truncate">Faculty</div>
+                  <div className="text-[9px] text-slate-500 dark:text-slate-400 truncate">Faculty</div>
                 </button>
 
                 <button
@@ -148,13 +157,13 @@ export default function LoginPage() {
                   onClick={() => handleRoleSelect('ADMIN')}
                   className={`p-2.5 rounded-xl border text-center transition-all ${
                     selectedRole === 'ADMIN'
-                      ? 'bg-amber-500/20 border-amber-500 text-white shadow-glow'
-                      : 'bg-surface-700/40 border-white/5 text-slate-400 hover:text-white hover:bg-white/5'
+                      ? 'bg-amber-500/20 border-amber-500 text-amber-700 dark:text-white shadow-glow'
+                      : 'bg-slate-100 dark:bg-surface-700/40 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5'
                   }`}
                 >
-                  <Shield className={`w-4 h-4 mx-auto mb-1 ${selectedRole === 'ADMIN' ? 'text-amber-400' : 'text-slate-400'}`} />
+                  <Shield className={`w-4 h-4 mx-auto mb-1 ${selectedRole === 'ADMIN' ? 'text-amber-500 dark:text-amber-400' : 'text-slate-400'}`} />
                   <div className="text-xs font-bold">Admin</div>
-                  <div className="text-[9px] text-slate-400 truncate">Administrator</div>
+                  <div className="text-[9px] text-slate-500 dark:text-slate-400 truncate">Administrator</div>
                 </button>
               </div>
             </div>
@@ -163,7 +172,7 @@ export default function LoginPage() {
               <div className="form-group">
                 <label className="input-label text-xs">Email Address</label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
+                  <Mail className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 dark:text-slate-500" />
                   <input
                     type="email"
                     required
@@ -180,13 +189,13 @@ export default function LoginPage() {
                   <label className="input-label text-xs !mb-0">Password</label>
                   <Link
                     to="/forgot-password"
-                    className="text-[11px] text-brand-400 hover:text-brand-300 hover:underline transition-colors"
+                    className="text-[11px] text-brand-600 dark:text-brand-400 hover:underline transition-colors"
                   >
                     Forgot Password?
                   </Link>
                 </div>
                 <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
+                  <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400 dark:text-slate-500" />
                   <input
                     type="password"
                     required
@@ -202,14 +211,14 @@ export default function LoginPage() {
               {loginError && (
                 <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
                   <div className="flex items-start gap-2.5">
-                    <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-                    <p className="text-xs text-red-300 leading-relaxed">{loginError}</p>
+                    <AlertCircle className="w-4 h-4 text-red-500 dark:text-red-400 mt-0.5 shrink-0" />
+                    <p className="text-xs text-red-600 dark:text-red-300 leading-relaxed">{loginError}</p>
                   </div>
                   {showForgotPassword && (
                     <div className="pl-6.5">
                       <Link
                         to="/forgot-password"
-                        className="text-xs font-semibold text-brand-400 hover:text-brand-300 hover:underline transition-colors"
+                        className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline transition-colors"
                       >
                         Forgot Password?
                       </Link>
@@ -222,12 +231,11 @@ export default function LoginPage() {
                 {loading ? 'Authenticating...' : `Sign In as ${selectedRole === 'ADMIN' ? 'Administrator' : selectedRole === 'TRAINER' ? 'Trainer' : 'Learner'}`} <ArrowRight className="w-4 h-4" />
               </button>
             </form>
-
           </div>
 
-          <div className="text-center text-xs text-slate-400 pt-4">
+          <div className="text-center text-xs text-slate-500 dark:text-slate-400 pt-4">
             New Official?{' '}
-            <Link to="/register" className="text-brand-400 font-semibold hover:underline">
+            <Link to="/register" className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
               Create an Account
             </Link>
           </div>

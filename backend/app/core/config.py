@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     
     GEMINI_API_KEY: str = ""
+    YOUTUBE_API_KEY: str = ""
     REDIS_URL: str = "redis://localhost:6379"
     CHROMA_PERSIST_DIR: str = "./chroma_db"
     UPLOAD_DIR: str = "./uploads"

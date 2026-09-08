@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useThemeStore } from './stores/themeStore';
 import MainLayout from './components/layout/MainLayout';
 import PrivateRoute from './components/PrivateRoute';
 import LandingPage from './pages/LandingPage';
@@ -26,6 +27,12 @@ import TrainerQuizzesPage from './pages/trainer/TrainerQuizzesPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 
 export default function App() {
+  const initTheme = useThemeStore((state) => state.initTheme)
+
+  useEffect(() => {
+    initTheme()
+  }, [initTheme])
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
