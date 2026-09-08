@@ -5,6 +5,7 @@ import PrivateRoute from './components/PrivateRoute';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordFlow from './pages/auth/ForgotPasswordFlow';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import ProfilePage from './pages/profile/ProfilePage';
 import ProfileSetupPage from './pages/profile/ProfileSetupPage';
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
       <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/assessment" element={<OnboardingAssessmentPage />} />

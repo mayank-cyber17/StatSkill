@@ -3,18 +3,23 @@ import { Link, useNavigate } from 'react-router-dom'
 import { authAPI } from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
 import toast from 'react-hot-toast'
-import { Brain, Lock, Mail, ArrowRight, UserCheck, Shield, Award } from 'lucide-react'
+import { Brain, Lock, Mail, ArrowRight, UserCheck, Shield, Award, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState('LEARNER')
   const [email, setEmail] = useState('learner@statiq.gov.in')
   const [password, setPassword] = useState('Demo@1234')
   const [loading, setLoading] = useState(false)
+  const [loginError, setLoginError] = useState('')
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
   const navigate = useNavigate()
   const setAuth = useAuthStore((state) => state.setAuth)
 
+
   const handleRoleSelect = (role) => {
     setSelectedRole(role)
+    setLoginError('')
+    setShowForgotPassword(false)
     if (role === 'LEARNER') {
       setEmail('learner@statiq.gov.in')
       setPassword('Demo@1234')
@@ -29,6 +34,8 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoginError('')
+    setShowForgotPassword(false)
     setLoading(true)
     try {
       const res = await authAPI.login({ email, password })
@@ -39,7 +46,19 @@ export default function LoginPage() {
       else if (user.role === 'TRAINER') navigate('/trainer')
       else navigate('/dashboard')
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Invalid email or password')
+      const status = err.response?.status
+      const detail = err.response?.data?.detail || ''
+      // Show inline error for wrong credentials; toast for network/other errors
+      if ((status === 400 || status === 401) && (
+        detail.toLowerCase().includes('incorrect') ||
+        detail.toLowerCase().includes('password') ||
+        detail.toLowerCase().includes('invalid')
+      )) {
+        setLoginError('Incorrect password. Please enter the correct password.')
+        setShowForgotPassword(true)
+      } else {
+        toast.error(detail || 'Login failed. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
@@ -157,24 +176,53 @@ export default function LoginPage() {
               </div>
 
               <div className="form-group">
-                <label className="input-label text-xs">Password</label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="input-label text-xs !mb-0">Password</label>
+                  <Link
+                    to="/forgot-password"
+                    className="text-[11px] text-brand-400 hover:text-brand-300 hover:underline transition-colors"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
                 <div className="relative">
                   <Lock className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
                   <input
                     type="password"
                     required
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => { setPassword(e.target.value); if (loginError) { setLoginError(''); setShowForgotPassword(false); } }}
                     placeholder="••••••••"
-                    className="input pl-10 text-xs"
+                    className={`input pl-10 text-xs ${loginError ? 'border-red-500/60 focus:border-red-500' : ''}`}
                   />
                 </div>
               </div>
+
+              {/* Inline error message + Forgot Password link */}
+              {loginError && (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <div className="flex items-start gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
+                    <p className="text-xs text-red-300 leading-relaxed">{loginError}</p>
+                  </div>
+                  {showForgotPassword && (
+                    <div className="pl-6.5">
+                      <Link
+                        to="/forgot-password"
+                        className="text-xs font-semibold text-brand-400 hover:text-brand-300 hover:underline transition-colors"
+                      >
+                        Forgot Password?
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <button type="submit" disabled={loading} className="btn btn-primary w-full py-3 text-sm shadow-glow">
                 {loading ? 'Authenticating...' : `Sign In as ${selectedRole === 'ADMIN' ? 'Administrator' : selectedRole === 'TRAINER' ? 'Trainer' : 'Learner'}`} <ArrowRight className="w-4 h-4" />
               </button>
             </form>
+
           </div>
 
           <div className="text-center text-xs text-slate-400 pt-4">

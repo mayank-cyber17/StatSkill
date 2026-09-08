@@ -21,6 +21,7 @@ frontend/.env.*
 *.db
 *.sqlite
 *.sqlite3
+*.bak
 backend/statiq.db
 backend/chroma_db/
 backend/uploads/

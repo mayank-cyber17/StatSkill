@@ -4,3 +4,4 @@ from app.models.profile import OfficialProfile, CompetencyDomain, Competency, Jo
 from app.models.learning import LearningPath, LearningPathItem, IGOTCourse, IGOTEnrollment, NSSTAProgram, NSSTANomination
 from app.models.assessment import Document, DocumentChunk, Quiz, MCQQuestion, QuizAttempt, QuestionResponse, AssistantConversation, AssistantMessage
 from app.models.analytics import LearningEvent
+from app.models.password_reset import PasswordResetOTP

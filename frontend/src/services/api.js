@@ -35,6 +35,10 @@ export const authAPI = {
   login: (data) => api.post('/auth/login', data),
   me: () => api.get('/auth/me'),
   logout: () => { localStorage.removeItem('statiq_token'); localStorage.removeItem('statiq_user') },
+  forgotPassword: (data) => api.post('/auth/forgot-password', data),
+  verifyOTP: (data) => api.post('/auth/verify-otp', data),
+  resetPassword: (data) => api.post('/auth/reset-password', data),
+  resendOTP: (data) => api.post('/auth/resend-otp', data),
 }
 
 // Profile
