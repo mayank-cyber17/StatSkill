@@ -8,6 +8,7 @@ import {
   Activity, Clock
 } from 'lucide-react'
 import InnoWingFloatingWidget from '../assistant/InnoWingFloatingWidget'
+import ErrorBoundary from '../common/ErrorBoundary'
 
 export default function MainLayout() {
   const user = useAuthStore((state) => state.user)
@@ -302,7 +303,9 @@ export default function MainLayout() {
 
         {/* Page Outlet */}
         <div className="p-6 md:p-8 flex-1">
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </div>
       </main>
 

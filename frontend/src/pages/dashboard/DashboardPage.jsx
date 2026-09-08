@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { profileAPI, gapAPI, learningPathAPI, quizAPI } from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
 import { 
-  Brain, Target, Map, FileQuestion, BookOpen, GraduationCap, 
+  Brain, Target, Map as MapIcon, FileQuestion, BookOpen, GraduationCap, 
   ArrowRight, Award, CheckCircle2, Clock, Sparkles
 } from 'lucide-react'
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts'
@@ -196,7 +196,7 @@ export default function DashboardPage() {
         <div className="stat-card">
           <div className="flex justify-between items-start">
             <span className="stat-label">Pathway Progress</span>
-            <Map className="w-5 h-5 text-purple-400" />
+            <MapIcon className="w-5 h-5 text-purple-400" />
           </div>
           <div className="stat-value text-purple-400">{pathwayProgress}%</div>
           <div className="stat-change text-purple-300">Targeted modules</div>
