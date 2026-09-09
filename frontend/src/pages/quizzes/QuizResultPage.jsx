@@ -4,7 +4,8 @@ import { quizAPI } from '../../services/api'
 import { MOCK_QUIZZES } from '../../data/mockQuizzes'
 import { 
   Award, CheckCircle2, XCircle, Brain, ArrowRight, RefreshCw, 
-  Sparkles, BookOpen, AlertCircle, Filter, ArrowLeft, Check, HelpCircle
+  Sparkles, BookOpen, AlertCircle, Filter, ArrowLeft, Check, HelpCircle,
+  BarChart3, MinusCircle, Target, Percent, Clock
 } from 'lucide-react'
 
 export default function QuizResultPage() {
@@ -13,7 +14,7 @@ export default function QuizResultPage() {
   
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(location.state?.result || null)
-  const [filterMode, setFilterMode] = useState('ALL') // 'ALL' | 'CORRECT' | 'INCORRECT'
+  const [filterMode, setFilterMode] = useState('ALL') // 'ALL' | 'CORRECT' | 'INCORRECT' | 'UNATTEMPTED'
 
   useEffect(() => {
     // If result was passed with valid questions, use it directly
@@ -80,7 +81,7 @@ export default function QuizResultPage() {
       <div className="max-w-4xl mx-auto space-y-6 py-12 text-center">
         <div className="w-12 h-12 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
         <h3 className="text-lg font-bold text-white">Synthesizing Evaluation Results...</h3>
-        <p className="text-slate-400 text-sm">Grading responses and analyzing correct & incorrect options...</p>
+        <p className="text-slate-400 text-sm">Grading responses and analyzing correct, incorrect, and unattempted questions...</p>
       </div>
     )
   }
@@ -103,9 +104,42 @@ export default function QuizResultPage() {
     : []
 
   const totalQuestions = rawQuestions.length || resData.total || 10
-  const score = resData.score !== undefined ? resData.score : rawQuestions.filter(q => q.is_correct).length
-  const percentage = resData.percentage ?? Math.round(((score) / (totalQuestions || 1)) * 100)
+
+  // Helper to determine exact question attempt status:
+  // 'CORRECT' | 'INCORRECT' | 'UNATTEMPTED'
+  const getQuestionStatus = (q) => {
+    const rawSelected = q.selected !== undefined && q.selected !== null && String(q.selected).trim() !== ''
+      ? String(q.selected).trim().toUpperCase()
+      : null
+
+    if (!rawSelected) {
+      return 'UNATTEMPTED'
+    }
+
+    const rawCorrect = String(q.correct || q.correct_option || 'A').trim().toUpperCase()
+    
+    if (q.is_correct !== undefined && q.is_correct !== null) {
+      return q.is_correct ? 'CORRECT' : 'INCORRECT'
+    }
+    return rawSelected === rawCorrect ? 'CORRECT' : 'INCORRECT'
+  }
+
+  // 3 Mutually exclusive sets
+  const correctQuestions = rawQuestions.filter((q) => getQuestionStatus(q) === 'CORRECT')
+  const incorrectQuestions = rawQuestions.filter((q) => getQuestionStatus(q) === 'INCORRECT')
+  const unattemptedQuestions = rawQuestions.filter((q) => getQuestionStatus(q) === 'UNATTEMPTED')
+
+  const score = correctQuestions.length
+  const percentage = Math.round((score / (totalQuestions || 1)) * 100)
   const passed = resData.passed !== undefined ? resData.passed : percentage >= 60
+
+  const attemptedCount = correctQuestions.length + incorrectQuestions.length
+  const attemptRate = Math.round((attemptedCount / (totalQuestions || 1)) * 100)
+  const accuracyRate = attemptedCount > 0 ? Math.round((correctQuestions.length / attemptedCount) * 100) : 0
+
+  const correctPercent = Math.round((correctQuestions.length / (totalQuestions || 1)) * 100)
+  const incorrectPercent = Math.round((incorrectQuestions.length / (totalQuestions || 1)) * 100)
+  const unattemptedPercent = Math.max(0, 100 - correctPercent - incorrectPercent)
 
   const getOptionText = (q, key) => {
     if (!key) return ''
@@ -117,27 +151,12 @@ export default function QuizResultPage() {
     return ''
   }
 
-  // Count correct and incorrect
-  const correctQuestions = rawQuestions.filter((q) => {
-    const rawCorrect = String(q.correct || q.correct_option || 'A').trim().toUpperCase()
-    const rawSelected = q.selected ? String(q.selected).trim().toUpperCase() : null
-    return q.is_correct !== undefined ? q.is_correct : (rawSelected === rawCorrect)
-  })
-
-  const incorrectQuestions = rawQuestions.filter((q) => {
-    const rawCorrect = String(q.correct || q.correct_option || 'A').trim().toUpperCase()
-    const rawSelected = q.selected ? String(q.selected).trim().toUpperCase() : null
-    const isCorr = q.is_correct !== undefined ? q.is_correct : (rawSelected === rawCorrect)
-    return !isCorr
-  })
-
-  // Filtered list
+  // Filtered list for detailed review
   const filteredQuestions = rawQuestions.filter((q) => {
-    const rawCorrect = String(q.correct || q.correct_option || 'A').trim().toUpperCase()
-    const rawSelected = q.selected ? String(q.selected).trim().toUpperCase() : null
-    const isCorr = q.is_correct !== undefined ? q.is_correct : (rawSelected === rawCorrect)
-    if (filterMode === 'CORRECT') return isCorr
-    if (filterMode === 'INCORRECT') return !isCorr
+    const status = getQuestionStatus(q)
+    if (filterMode === 'CORRECT') return status === 'CORRECT'
+    if (filterMode === 'INCORRECT') return status === 'INCORRECT'
+    if (filterMode === 'UNATTEMPTED') return status === 'UNATTEMPTED'
     return true
   })
 
@@ -177,15 +196,18 @@ export default function QuizResultPage() {
         </div>
 
         {/* Quick stat counters */}
-        <div className="flex items-center justify-center gap-4 text-xs font-semibold pt-1">
+        <div className="flex items-center justify-center gap-3 text-xs font-semibold pt-1 flex-wrap">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
             <CheckCircle2 className="w-4 h-4" /> {correctQuestions.length} Correct
           </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30">
             <XCircle className="w-4 h-4" /> {incorrectQuestions.length} Incorrect
           </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
+            <MinusCircle className="w-4 h-4" /> {unattemptedQuestions.length} Did Not Attempt
+          </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-700 text-slate-300 border border-white/10">
-            <BookOpen className="w-4 h-4 text-brand-400" /> {totalQuestions} Total Questions
+            <BookOpen className="w-4 h-4 text-brand-400" /> {totalQuestions} Total
           </span>
         </div>
 
@@ -205,6 +227,177 @@ export default function QuizResultPage() {
         </div>
       </div>
 
+      {/* ── NEW DEDICATED SECTION: Quiz Performance & Attempt Breakdown ── */}
+      <div className="card p-6 sm:p-7 space-y-6 border border-white/10 bg-surface-900/90 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400">
+              <BarChart3 className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-display font-bold text-white">
+                Attempt Breakdown & Performance Analytics
+              </h3>
+              <p className="text-xs text-slate-400">
+                Summary of correct answers, wrong answers, and skipped questions
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${
+              passed
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                : 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+            }`}>
+              {passed ? 'Passed (≥ 60%)' : 'Needs Review (< 60%)'}
+            </span>
+          </div>
+        </div>
+
+        {/* 3 Metric Cards: Correct, Incorrect, Did Not Attempt */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* 1. Correct Card */}
+          <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2 relative overflow-hidden transition-all hover:bg-emerald-500/15">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4" /> Correct
+              </span>
+              <span className="text-[11px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">
+                {correctPercent}%
+              </span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-display font-extrabold text-white">
+                {correctQuestions.length}
+              </span>
+              <span className="text-xs text-slate-400 font-medium">
+                / {totalQuestions} questions
+              </span>
+            </div>
+            <p className="text-[11px] text-emerald-300/80 leading-snug">
+              Answered accurately and validated against curriculum benchmarks.
+            </p>
+          </div>
+
+          {/* 2. Incorrect Card */}
+          <div className="p-5 rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-2 relative overflow-hidden transition-all hover:bg-rose-500/15">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                <XCircle className="w-4 h-4" /> Incorrect
+              </span>
+              <span className="text-[11px] font-mono font-bold text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-full">
+                {incorrectPercent}%
+              </span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-display font-extrabold text-white">
+                {incorrectQuestions.length}
+              </span>
+              <span className="text-xs text-slate-400 font-medium">
+                / {totalQuestions} questions
+              </span>
+            </div>
+            <p className="text-[11px] text-rose-300/80 leading-snug">
+              Attempted with an incorrect option selected.
+            </p>
+          </div>
+
+          {/* 3. Did Not Attempt Card */}
+          <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2 relative overflow-hidden transition-all hover:bg-amber-500/15">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                <MinusCircle className="w-4 h-4" /> Did Not Attempt
+              </span>
+              <span className="text-[11px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full">
+                {unattemptedPercent}%
+              </span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-display font-extrabold text-white">
+                {unattemptedQuestions.length}
+              </span>
+              <span className="text-xs text-slate-400 font-medium">
+                / {totalQuestions} questions
+              </span>
+            </div>
+            <p className="text-[11px] text-amber-300/80 leading-snug">
+              Skipped without selecting any option during the assessment.
+            </p>
+          </div>
+        </div>
+
+        {/* Visual Stacked Distribution Bar */}
+        <div className="space-y-2 pt-1">
+          <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
+            <span>Question Response Distribution</span>
+            <span>{totalQuestions} Total Questions</span>
+          </div>
+          
+          <div className="h-4 w-full bg-surface-800 rounded-full overflow-hidden flex shadow-inner">
+            {correctQuestions.length > 0 && (
+              <div 
+                style={{ width: `${(correctQuestions.length / totalQuestions) * 100}%` }}
+                className="h-full bg-emerald-500 transition-all duration-500 hover:opacity-90"
+                title={`Correct: ${correctQuestions.length} (${correctPercent}%)`}
+              />
+            )}
+            {incorrectQuestions.length > 0 && (
+              <div 
+                style={{ width: `${(incorrectQuestions.length / totalQuestions) * 100}%` }}
+                className="h-full bg-rose-500 transition-all duration-500 hover:opacity-90"
+                title={`Incorrect: ${incorrectQuestions.length} (${incorrectPercent}%)`}
+              />
+            )}
+            {unattemptedQuestions.length > 0 && (
+              <div 
+                style={{ width: `${(unattemptedQuestions.length / totalQuestions) * 100}%` }}
+                className="h-full bg-amber-500 transition-all duration-500 hover:opacity-90"
+                title={`Did Not Attempt: ${unattemptedQuestions.length} (${unattemptedPercent}%)`}
+              />
+            )}
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] text-slate-400 flex-wrap gap-2 pt-1">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+              Correct ({correctQuestions.length} / {correctPercent}%)
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+              Incorrect ({incorrectQuestions.length} / {incorrectPercent}%)
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+              Did Not Attempt ({unattemptedQuestions.length} / {unattemptedPercent}%)
+            </span>
+          </div>
+        </div>
+
+        {/* Secondary KPIs: Attempt Rate & Accuracy */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-white/10">
+          <div className="bg-surface-800/60 p-3 rounded-xl border border-white/5 text-center">
+            <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Attempt Rate</span>
+            <span className="text-base font-bold text-white font-mono mt-0.5 block">{attemptRate}%</span>
+            <span className="text-[10px] text-slate-500">{attemptedCount} of {totalQuestions}</span>
+          </div>
+          <div className="bg-surface-800/60 p-3 rounded-xl border border-white/5 text-center">
+            <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Attempted Accuracy</span>
+            <span className="text-base font-bold text-emerald-400 font-mono mt-0.5 block">{accuracyRate}%</span>
+            <span className="text-[10px] text-slate-500">{correctQuestions.length} of {attemptedCount || 1}</span>
+          </div>
+          <div className="bg-surface-800/60 p-3 rounded-xl border border-white/5 text-center">
+            <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Skip Rate</span>
+            <span className="text-base font-bold text-amber-400 font-mono mt-0.5 block">{unattemptedPercent}%</span>
+            <span className="text-[10px] text-slate-500">{unattemptedQuestions.length} skipped</span>
+          </div>
+          <div className="bg-surface-800/60 p-3 rounded-xl border border-white/5 text-center">
+            <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Passing Score</span>
+            <span className="text-base font-bold text-brand-300 font-mono mt-0.5 block">60%</span>
+            <span className="text-[10px] text-slate-500">{percentage >= 60 ? 'Achieved' : 'Below target'}</span>
+          </div>
+        </div>
+      </div>
+
       {/* AI Personalized Feedback */}
       <div className="card p-6 border-l-4 border-l-brand-500 space-y-2">
         <div className="flex items-center gap-2 text-xs font-semibold text-brand-300 uppercase tracking-wider">
@@ -221,39 +414,36 @@ export default function QuizResultPage() {
       {/* Question Jump Palette */}
       {rawQuestions.length > 0 && (
         <div className="card p-4 space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="flex items-center justify-between text-xs text-slate-400 flex-wrap gap-2">
             <span className="font-semibold text-slate-300">Quick Jump to Question</span>
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1 text-emerald-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" /> Correct
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" /> Correct ({correctQuestions.length})
               </span>
               <span className="flex items-center gap-1 text-rose-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block" /> Incorrect
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block" /> Incorrect ({incorrectQuestions.length})
               </span>
               <span className="flex items-center gap-1 text-amber-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" /> Skipped
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" /> Did Not Attempt ({unattemptedQuestions.length})
               </span>
             </div>
           </div>
           <div className="flex gap-2 flex-wrap pt-1">
             {rawQuestions.map((q, idx) => {
-              const rawCorrect = String(q.correct || q.correct_option || 'A').trim().toUpperCase()
-              const rawSelected = q.selected ? String(q.selected).trim().toUpperCase() : null
-              const isCorr = q.is_correct !== undefined ? q.is_correct : (rawSelected === rawCorrect)
-              const isUnanswered = !rawSelected
+              const status = getQuestionStatus(q)
 
               return (
                 <button
                   key={q.question_id || idx}
                   onClick={() => scrollToQuestion(idx)}
                   className={`w-9 h-9 rounded-lg text-xs font-bold transition-all border flex items-center justify-center ${
-                    isUnanswered
+                    status === 'UNATTEMPTED'
                       ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 hover:bg-amber-500/30'
-                      : isCorr
+                      : status === 'CORRECT'
                       ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/30'
                       : 'bg-rose-500/20 text-rose-400 border-rose-500/40 hover:bg-rose-500/30'
                   }`}
-                  title={`Question ${idx + 1}: ${isUnanswered ? 'Skipped' : isCorr ? 'Correct' : 'Incorrect'}`}
+                  title={`Question ${idx + 1}: ${status === 'UNATTEMPTED' ? 'Did Not Attempt' : status === 'CORRECT' ? 'Correct' : 'Incorrect'}`}
                 >
                   {idx + 1}
                 </button>
@@ -272,12 +462,12 @@ export default function QuizResultPage() {
               <BookOpen className="w-5 h-5 text-brand-400" /> Detailed Question & Option Review
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Review every option with clear indications of which choices were correct or incorrect.
+              Review every option with clear indications of which choices were correct, incorrect, or skipped.
             </p>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex items-center gap-1.5 bg-surface-800 p-1 rounded-xl border border-white/10 self-start sm:self-auto">
+          {/* 4 Filter Pills */}
+          <div className="flex items-center gap-1.5 bg-surface-800 p-1 rounded-xl border border-white/10 self-start sm:self-auto flex-wrap">
             <button
               onClick={() => setFilterMode('ALL')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -308,6 +498,16 @@ export default function QuizResultPage() {
             >
               ✗ Incorrect ({incorrectQuestions.length})
             </button>
+            <button
+              onClick={() => setFilterMode('UNATTEMPTED')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                filterMode === 'UNATTEMPTED'
+                  ? 'bg-amber-600 text-white shadow-glow'
+                  : 'text-amber-400 hover:text-amber-300'
+              }`}
+            >
+              ⊘ Did Not Attempt ({unattemptedQuestions.length})
+            </button>
           </div>
         </div>
 
@@ -315,9 +515,13 @@ export default function QuizResultPage() {
         {filteredQuestions && filteredQuestions.length > 0 ? (
           filteredQuestions.map((q, idx) => {
             const rawCorrect = String(q.correct || q.correct_option || 'A').trim().toUpperCase()
-            const rawSelected = q.selected ? String(q.selected).trim().toUpperCase() : null
-            const isCorrect = q.is_correct !== undefined ? q.is_correct : (rawSelected === rawCorrect)
-            const isUnanswered = !rawSelected
+            const rawSelected = q.selected !== undefined && q.selected !== null && String(q.selected).trim() !== ''
+              ? String(q.selected).trim().toUpperCase()
+              : null
+            const status = getQuestionStatus(q)
+            const isUnanswered = status === 'UNATTEMPTED'
+            const isCorrect = status === 'CORRECT'
+
             const originalIndex = rawQuestions.findIndex(item => item.question_id === q.question_id || item.question_text === q.question_text)
             const displayIdx = originalIndex >= 0 ? originalIndex + 1 : idx + 1
 
@@ -334,7 +538,7 @@ export default function QuizResultPage() {
                 }`}
               >
                 {/* Question Header */}
-                <div className="flex items-center justify-between text-xs gap-2">
+                <div className="flex items-center justify-between text-xs gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-white bg-surface-700 px-2.5 py-1 rounded-md border border-white/5">
                       Question {displayIdx} of {totalQuestions}
@@ -349,11 +553,11 @@ export default function QuizResultPage() {
                   {/* Status Badge */}
                   {isUnanswered ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">
-                      <AlertCircle className="w-3.5 h-3.5" /> Not Answered
+                      <MinusCircle className="w-3.5 h-3.5" /> Did Not Attempt
                     </span>
                   ) : isCorrect ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Correct
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Correct (+1 Mark)
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">
@@ -448,7 +652,7 @@ export default function QuizResultPage() {
                     <div className="flex items-center gap-2">
                       {isUnanswered ? (
                         <span className="text-amber-400 font-semibold text-xs flex items-center gap-1.5">
-                          <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" /> Not Answered (Skipped)
+                          <MinusCircle className="w-4 h-4 text-amber-400 flex-shrink-0" /> Did Not Attempt (Skipped)
                         </span>
                       ) : isCorrect ? (
                         <span className="text-emerald-400 font-semibold text-xs flex items-center gap-1.5">
@@ -494,7 +698,9 @@ export default function QuizResultPage() {
             <h4 className="text-base font-bold text-white">No questions match the active filter</h4>
             <p className="text-xs text-slate-400">
               {filterMode === 'INCORRECT'
-                ? 'Congratulations! You answered all questions correctly.'
+                ? 'Great job! You answered all attempted questions correctly.'
+                : filterMode === 'UNATTEMPTED'
+                ? 'You attempted every single question in this assessment!'
                 : 'Click "All" to view the complete assessment questions.'}
             </p>
             <button onClick={() => setFilterMode('ALL')} className="btn btn-secondary text-xs mx-auto">
@@ -522,4 +728,3 @@ export default function QuizResultPage() {
     </div>
   )
 }
-

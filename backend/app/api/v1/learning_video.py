@@ -1,4 +1,4 @@
-﻿"""
+"""
 GET /api/v1/learning-video?topic=<course title>
 
 Public endpoint (no auth required) that:
@@ -45,7 +45,7 @@ def _check_rate_limit(ip: str) -> bool:
 @router.get("")
 async def get_learning_video(
     request: Request,
-    topic: str = Query(..., min_length=3, max_length=200, description="Course/topic name to search for"),
+    topic: str = Query(..., min_length=1, max_length=500, description="Course/topic name to search for"),
 ):
     """
     Search for the best educational YouTube video for the given topic.

@@ -5,7 +5,8 @@ import { quizAPI } from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
 import { 
   Brain, CheckCircle2, Clock, ArrowRight, ArrowLeft, ShieldCheck, 
-  Target, Award, BookOpen, AlertCircle, Sparkles, Check, HelpCircle, XCircle 
+  Target, Award, BookOpen, AlertCircle, Sparkles, Check, HelpCircle, XCircle,
+  BarChart3, MinusCircle
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -351,6 +352,91 @@ export default function OnboardingAssessmentPage() {
             </div>
           </div>
         </div>
+
+        {/* Attempt Breakdown Section */}
+        {(() => {
+          const feedbackList = evaluationResult.feedback || []
+          const totalQ = evaluationResult.total || feedbackList.length || questions.length || 10
+          const correctQ = evaluationResult.score !== undefined 
+            ? evaluationResult.score 
+            : feedbackList.filter(f => f.is_correct).length
+          const unattemptedQ = feedbackList.filter(f => !f.selected || String(f.selected).trim() === '').length
+          const incorrectQ = Math.max(0, totalQ - correctQ - unattemptedQ)
+
+          const correctPct = Math.round((correctQ / (totalQ || 1)) * 100)
+          const incorrectPct = Math.round((incorrectQ / (totalQ || 1)) * 100)
+          const unattemptedPct = Math.max(0, 100 - correctPct - incorrectPct)
+
+          return (
+            <div className="card p-6 space-y-5 border border-white/10 bg-surface-900/90 shadow-xl">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-brand-400" />
+                  <h3 className="font-display font-bold text-white text-base">
+                    Assessment Performance & Attempt Breakdown
+                  </h3>
+                </div>
+                <span className="text-xs text-slate-400 font-mono">{totalQ} Total Questions</span>
+              </div>
+
+              {/* 3 Metric Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
+                  <div className="flex items-center justify-between text-xs font-bold text-emerald-400">
+                    <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Correct</span>
+                    <span>{correctPct}%</span>
+                  </div>
+                  <div className="text-3xl font-extrabold text-white font-display">
+                    {correctQ} <span className="text-xs text-slate-400 font-normal">/ {totalQ}</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-300/80">Accurately verified competencies</p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-1">
+                  <div className="flex items-center justify-between text-xs font-bold text-rose-400">
+                    <span className="flex items-center gap-1"><XCircle className="w-4 h-4" /> Incorrect</span>
+                    <span>{incorrectPct}%</span>
+                  </div>
+                  <div className="text-3xl font-extrabold text-white font-display">
+                    {incorrectQ} <span className="text-xs text-slate-400 font-normal">/ {totalQ}</span>
+                  </div>
+                  <p className="text-[11px] text-rose-300/80">Selected incorrect option</p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
+                  <div className="flex items-center justify-between text-xs font-bold text-amber-400">
+                    <span className="flex items-center gap-1"><MinusCircle className="w-4 h-4" /> Did Not Attempt</span>
+                    <span>{unattemptedPct}%</span>
+                  </div>
+                  <div className="text-3xl font-extrabold text-white font-display">
+                    {unattemptedQ} <span className="text-xs text-slate-400 font-normal">/ {totalQ}</span>
+                  </div>
+                  <p className="text-[11px] text-amber-300/80">Skipped without answering</p>
+                </div>
+              </div>
+
+              {/* Stacked Bar */}
+              <div className="space-y-1.5 pt-1">
+                <div className="h-3.5 w-full bg-surface-800 rounded-full overflow-hidden flex">
+                  {correctQ > 0 && (
+                    <div style={{ width: `${(correctQ / totalQ) * 100}%` }} className="h-full bg-emerald-500" />
+                  )}
+                  {incorrectQ > 0 && (
+                    <div style={{ width: `${(incorrectQ / totalQ) * 100}%` }} className="h-full bg-rose-500" />
+                  )}
+                  {unattemptedQ > 0 && (
+                    <div style={{ width: `${(unattemptedQ / totalQ) * 100}%` }} className="h-full bg-amber-500" />
+                  )}
+                </div>
+                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+                  <span className="text-emerald-400">✓ {correctQ} Correct ({correctPct}%)</span>
+                  <span className="text-rose-400">✗ {incorrectQ} Incorrect ({incorrectPct}%)</span>
+                  <span className="text-amber-400">⊘ {unattemptedQ} Skipped ({unattemptedPct}%)</span>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
 
         {/* Strengths and Gaps Grid */}
         <div className="grid md:grid-cols-2 gap-6">
