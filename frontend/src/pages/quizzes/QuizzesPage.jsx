@@ -94,12 +94,12 @@ export default function QuizzesPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-6">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <FileQuestion className="w-7 h-7 text-emerald-400" /> Quizzes & Grounded AI Assessments
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <FileQuestion className="w-7 h-7 text-emerald-500 dark:text-emerald-400" /> Quizzes & Grounded AI Assessments
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             Official MoSPI competency assessments and AI-synthesized MCQs generated directly from uploaded learning materials.
           </p>
         </div>
@@ -115,15 +115,15 @@ export default function QuizzesPage() {
       {courseFilter && (
         <div className="card p-4 border-l-4 border-l-accent-500 bg-accent-500/10 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Award className="w-6 h-6 text-accent-400 flex-shrink-0" />
+            <Award className="w-6 h-6 text-emerald-500 dark:text-accent-400 flex-shrink-0" />
             <div>
-              <h4 className="text-sm font-bold text-white">Course Completed: Ready for Competency Verification</h4>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">Course Completed: Ready for Competency Verification</h4>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                 Take the official capstone assessment below to verify your competencies and update your StatIQ capacity profile.
               </p>
             </div>
           </div>
-          <Link to="/quizzes" className="text-xs text-slate-400 hover:text-white underline whitespace-nowrap">
+          <Link to="/quizzes" className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white underline whitespace-nowrap">
             View All Quizzes
           </Link>
         </div>
@@ -143,7 +143,7 @@ export default function QuizzesPage() {
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
-          <Filter className="w-4 h-4 text-slate-400 flex-shrink-0" />
+          <Filter className="w-4 h-4 text-slate-500 dark:text-slate-400 flex-shrink-0" />
           <select
             value={selectedDomain}
             onChange={(e) => setSelectedDomain(e.target.value)}
@@ -157,8 +157,8 @@ export default function QuizzesPage() {
       </div>
 
       {/* Total Count Header */}
-      <div className="flex items-center justify-between text-xs text-slate-400">
-        <span>Showing <strong className="text-white">{sortedQuizzes.length}</strong> available quizzes</span>
+      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <span>Showing <strong className="text-slate-900 dark:text-white">{sortedQuizzes.length}</strong> available quizzes</span>
         <span className="badge badge-brand">Grounded RAG & MoSPI Curriculum</span>
       </div>
 
@@ -170,15 +170,15 @@ export default function QuizzesPage() {
           return (
             <div
               key={q.id}
-              className={`card-glow p-6 flex flex-col justify-between space-y-4 transition-all ${
+              className={`card-glow p-6 flex flex-col justify-between space-y-4 transition-all bg-white dark:bg-surface-800 ${
                 isCourseMatch
-                  ? 'border-2 border-accent-500 shadow-glow bg-gradient-to-b from-accent-500/10 to-surface-800'
+                  ? 'border-2 border-accent-500 shadow-glow bg-gradient-to-b from-accent-500/10 to-white dark:to-surface-800'
                   : 'border-t-4 border-t-emerald-500'
               }`}
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs gap-2">
-                  <span className={`badge ${q.domain.includes('Custom') ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'badge-brand'}`}>
+                  <span className={`badge ${q.domain.includes('Custom') ? 'bg-purple-50 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30' : 'badge-brand'}`}>
                     {q.domain}
                   </span>
                   <span className={`badge ${q.difficulty_level === 'HARD' ? 'badge-danger' : q.difficulty_level === 'MEDIUM' ? 'badge-warn' : 'badge-neutral'}`}>
@@ -187,26 +187,26 @@ export default function QuizzesPage() {
                 </div>
 
                 {isCourseMatch && (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-accent-500/20 text-accent-400 text-[11px] font-bold">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-accent-500/20 text-emerald-700 dark:text-accent-400 text-[11px] font-bold">
                     <Award className="w-3 h-3" /> Recommended Capstone Quiz
                   </div>
                 )}
 
-                <h3 className="font-bold text-white text-base leading-snug line-clamp-2">{q.title}</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white text-base leading-snug line-clamp-2">{q.title}</h3>
                 
                 {q.description && (
-                  <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed">{q.description}</p>
+                  <p className="text-slate-600 dark:text-slate-400 text-xs line-clamp-2 leading-relaxed">{q.description}</p>
                 )}
 
-                <div className="flex items-center gap-2 text-xs text-brand-300 font-mono">
-                  <FileQuestion className="w-3.5 h-3.5 text-brand-400" />
+                <div className="flex items-center gap-2 text-xs text-brand-600 dark:text-brand-300 font-mono">
+                  <FileQuestion className="w-3.5 h-3.5 text-brand-500 dark:text-brand-400" />
                   <span>{q.questionsCount} Multiple Choice Questions</span>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                <div className="text-[11px] text-slate-400 flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-slate-500" /> ~{Math.max(5, q.questionsCount * 1.5)} Mins
+              <div className="pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-slate-400 dark:text-slate-500" /> ~{Math.max(5, q.questionsCount * 1.5)} Mins
                 </div>
 
                 <Link
@@ -225,9 +225,9 @@ export default function QuizzesPage() {
 
       {sortedQuizzes.length === 0 && (
         <div className="card p-12 text-center space-y-4">
-          <FileQuestion className="w-12 h-12 text-slate-500 mx-auto" />
-          <h3 className="text-lg font-bold text-white">No quizzes found</h3>
-          <p className="text-slate-400 text-sm max-w-md mx-auto">
+          <FileQuestion className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto" />
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">No quizzes found</h3>
+          <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto">
             Try adjusting your search filter or upload a learning document to synthesize a new grounded quiz.
           </p>
           <Link to="/trainer/upload" className="btn btn-primary text-xs">

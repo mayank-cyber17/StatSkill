@@ -13,10 +13,10 @@ export default function TrainerDashboardPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <ClipboardList className="w-7 h-7 text-purple-400" /> Trainer Management Command Portal
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <ClipboardList className="w-7 h-7 text-purple-500 dark:text-purple-400" /> Trainer Management Command Portal
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             Upload official training manuals, manage RAG vector stores, and publish AI-generated quizzes.
           </p>
         </div>
@@ -29,45 +29,45 @@ export default function TrainerDashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="stat-card">
           <span className="stat-label">Uploaded Documents</span>
-          <div className="stat-value text-purple-400">12</div>
-          <div className="stat-change text-purple-300">PDF, DOCX, PPTX</div>
+          <div className="stat-value text-purple-600 dark:text-purple-400">12</div>
+          <div className="stat-change text-purple-600 dark:text-purple-300">PDF, DOCX, PPTX</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Generated Quizzes</span>
-          <div className="stat-value text-brand-400">8</div>
-          <div className="stat-change text-slate-400">Grounded MCQs</div>
+          <div className="stat-value text-brand-600 dark:text-brand-400">8</div>
+          <div className="stat-change text-slate-500 dark:text-slate-400">Grounded MCQs</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Learners Evaluated</span>
-          <div className="stat-value text-emerald-400">450</div>
-          <div className="stat-change text-emerald-400">Officers Attempted</div>
+          <div className="stat-value text-emerald-600 dark:text-emerald-400">450</div>
+          <div className="stat-change text-emerald-600 dark:text-emerald-400">Officers Attempted</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Vector Embeddings</span>
-          <div className="stat-value text-amber-400">1,240</div>
-          <div className="stat-change text-amber-300">ChromaDB Chunks</div>
+          <div className="stat-value text-amber-600 dark:text-amber-400">1,240</div>
+          <div className="stat-change text-amber-600 dark:text-amber-300">ChromaDB Chunks</div>
         </div>
       </div>
 
       <div className="card p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="section-title text-lg">Recent Ingested Learning Materials</h3>
-          <Link to="/trainer/upload" className="text-xs text-brand-400 font-semibold hover:underline">
+          <Link to="/trainer/upload" className="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline">
             + Add Material
           </Link>
         </div>
 
         <div className="space-y-3">
           {materials.map((m) => (
-            <div key={m.id} className="p-4 rounded-xl bg-surface-700/40 border border-white/5 flex items-center justify-between">
+            <div key={m.id} className="p-4 rounded-xl bg-slate-100/70 dark:bg-surface-700/40 border border-slate-200 dark:border-white/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <FileText className="w-6 h-6 text-purple-400 shrink-0" />
+                <FileText className="w-6 h-6 text-purple-500 dark:text-purple-400 shrink-0" />
                 <div>
-                  <div className="font-bold text-white text-sm">{m.name}</div>
-                  <div className="text-xs text-slate-400">{m.chunks} Text Chunks Ingested • Uploaded {m.date}</div>
+                  <div className="font-bold text-slate-900 dark:text-white text-sm">{m.name}</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">{m.chunks} Text Chunks Ingested • Uploaded {m.date}</div>
                 </div>
               </div>
 

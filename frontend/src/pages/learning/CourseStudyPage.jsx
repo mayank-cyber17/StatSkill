@@ -383,31 +383,31 @@ export default function CourseStudyPage() {
             <span className="badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
               <Clock className="w-3 h-3" /> {course.duration}
             </span>
-            <span className="text-slate-400 text-xs">{course.provider}</span>
+            <span className="text-slate-500 dark:text-slate-400 text-xs">{course.provider}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
+          <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 dark:text-white">
             {course.title}
           </h1>
-          <p className="text-slate-300 text-sm leading-relaxed font-light">
+          <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-light">
             {course.description}
           </p>
         </div>
 
         {/* Progress Card */}
-        <div className="card bg-surface-900/80 p-4 border border-white/10 shrink-0 w-full md:w-64 space-y-2 text-center md:text-left">
+        <div className="card bg-slate-50/80 dark:bg-surface-900/80 p-4 border border-slate-200 dark:border-white/10 shrink-0 w-full md:w-64 space-y-2 text-center md:text-left">
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-400">Course Completion</span>
-            <span className="font-bold text-brand-400 font-mono">{progressPercent}%</span>
+            <span className="text-slate-500 dark:text-slate-400">Course Completion</span>
+            <span className="font-bold text-brand-600 dark:text-brand-400 font-mono">{progressPercent}%</span>
           </div>
-          <div className="w-full h-2 bg-surface-700 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-slate-200 dark:bg-surface-700 rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-500" 
               style={{ width: `${progressPercent}%` }} 
             />
           </div>
-          <div className="text-[11px] text-slate-400 flex justify-between">
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 flex justify-between">
             <span>{completedCount} of {totalLessons} lessons done</span>
-            <span className="text-accent-400 font-medium">{progressPercent === 100 ? 'Certified' : 'In Progress'}</span>
+            <span className="text-accent-600 dark:text-accent-400 font-medium">{progressPercent === 100 ? 'Certified' : 'In Progress'}</span>
           </div>
         </div>
       </div>
@@ -417,11 +417,11 @@ export default function CourseStudyPage() {
         {/* Left Column: Course Syllabus (4 cols) */}
         <div className="lg:col-span-4 space-y-4">
           <div className="card p-4 space-y-3">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <h3 className="font-bold text-white text-sm flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-brand-400" /> Course Curriculum
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-brand-500 dark:text-brand-400" /> Course Curriculum
               </h3>
-              <span className="text-[10px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
                 {totalLessons} Modules
               </span>
             </div>
@@ -440,10 +440,10 @@ export default function CourseStudyPage() {
                     }}
                     className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-3 text-xs ${
                       isActive 
-                        ? 'bg-brand-500/15 border-brand-500/40 text-white shadow-glow' 
+                        ? 'bg-brand-500/15 border-brand-500/40 text-brand-900 dark:text-white shadow-glow' 
                         : isCompleted 
-                        ? 'bg-surface-800/40 border-white/5 text-slate-300 hover:bg-white/5' 
-                        : 'bg-surface-800/20 border-white/5 text-slate-400 hover:bg-white/5'
+                        ? 'bg-slate-100 dark:bg-surface-800/40 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/5' 
+                        : 'bg-slate-50 dark:bg-surface-800/20 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
                     }`}
                   >
                     <div 
@@ -452,20 +452,20 @@ export default function CourseStudyPage() {
                         handleToggleComplete(lesson.id)
                       }}
                       title={isCompleted ? "Mark as in-progress" : "Mark as completed"}
-                      className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-colors cursor-pointer ${
+                       className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-colors cursor-pointer ${
                         isCompleted 
                           ? 'bg-accent-500 text-white shadow-glow' 
-                          : 'border border-white/20 hover:border-brand-400 bg-surface-700'
+                          : 'border border-slate-300 dark:border-white/20 hover:border-brand-400 bg-slate-100 dark:bg-surface-700'
                       }`}
                     >
                       {isCompleted ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : null}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-white truncate">{lesson.title}</div>
+                      <div className="font-semibold text-slate-900 dark:text-white truncate">{lesson.title}</div>
                       <div className="text-[10px] text-slate-500 flex items-center gap-2 mt-1">
                         <Clock className="w-3 h-3" /> {lesson.duration}
-                        {isActive && <span className="text-brand-400 font-bold">• Active</span>}
+                        {isActive && <span className="text-brand-600 dark:text-brand-400 font-bold">• Active</span>}
                       </div>
                     </div>
                   </button>
@@ -476,15 +476,15 @@ export default function CourseStudyPage() {
 
           {/* Quick AI Tutor Help Box */}
           <div className="card p-5 border border-brand-500/20 bg-brand-500/5 space-y-3">
-            <div className="flex items-center gap-2 text-xs font-semibold text-brand-300">
-              <Sparkles className="w-4 h-4 text-brand-400" /> Need Help Understanding?
+            <div className="flex items-center gap-2 text-xs font-semibold text-brand-700 dark:text-brand-300">
+              <Sparkles className="w-4 h-4 text-brand-500 dark:text-brand-400" /> Need Help Understanding?
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Use the AI Assistant tab to get line-by-line code explanations and MoSPI statistical examples.
             </p>
             <button 
               onClick={() => setActiveTab('tutor')}
-              className="btn btn-ghost w-full text-xs text-brand-300 hover:text-white border border-brand-500/30 py-2"
+              className="btn btn-ghost w-full text-xs text-brand-700 dark:text-brand-300 hover:text-brand-900 dark:hover:text-white border border-brand-500/30 py-2"
             >
               Open AI Study Tutor →
             </button>
@@ -494,20 +494,20 @@ export default function CourseStudyPage() {
         {/* Right Column: Active Lesson Classroom (8 cols) */}
         <div className="lg:col-span-8 space-y-6">
           {/* Smart YouTube Video Player — dynamically fetches best educational video */}
-          <div className="card overflow-hidden border border-white/10">
+          <div className="card overflow-hidden border border-slate-200 dark:border-white/10">
             <LearningVideo
               topic={course.title}
               lessonTitle={activeLesson.title}
             />
 
             {/* Lesson Tabs Header */}
-            <div className="flex border-b border-white/10 bg-surface-800/60 text-xs">
+            <div className="flex border-b border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-surface-800/60 text-xs">
               <button
                 onClick={() => setActiveTab('notes')}
                 className={`flex-1 py-3 px-4 font-semibold text-center flex items-center justify-center gap-2 border-b-2 transition-all ${
                   activeTab === 'notes' 
-                    ? 'border-brand-500 text-white bg-white/5' 
-                    : 'border-transparent text-slate-400 hover:text-white'
+                    ? 'border-brand-500 text-brand-700 dark:text-white bg-brand-50/50 dark:bg-white/5' 
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <FileText className="w-4 h-4" /> Comprehensive Study Notes
@@ -516,8 +516,8 @@ export default function CourseStudyPage() {
                 onClick={() => setActiveTab('code')}
                 className={`flex-1 py-3 px-4 font-semibold text-center flex items-center justify-center gap-2 border-b-2 transition-all ${
                   activeTab === 'code' 
-                    ? 'border-brand-500 text-white bg-white/5' 
-                    : 'border-transparent text-slate-400 hover:text-white'
+                    ? 'border-brand-500 text-brand-700 dark:text-white bg-brand-50/50 dark:bg-white/5' 
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Code2 className="w-4 h-4" /> Practical Code Lab
@@ -526,11 +526,11 @@ export default function CourseStudyPage() {
                 onClick={() => setActiveTab('tutor')}
                 className={`flex-1 py-3 px-4 font-semibold text-center flex items-center justify-center gap-2 border-b-2 transition-all ${
                   activeTab === 'tutor' 
-                    ? 'border-brand-500 text-white bg-white/5' 
-                    : 'border-transparent text-slate-400 hover:text-white'
+                    ? 'border-brand-500 text-brand-700 dark:text-white bg-brand-50/50 dark:bg-white/5' 
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <Sparkles className="w-4 h-4 text-brand-400" /> AI Tutor Q&A
+                <Sparkles className="w-4 h-4 text-brand-500 dark:text-brand-400" /> AI Tutor Q&A
               </button>
             </div>
 
@@ -538,12 +538,12 @@ export default function CourseStudyPage() {
             <div className="p-6">
               {activeTab === 'notes' && (
                 <div className="space-y-4">
-                  <div className="p-4 rounded-xl bg-surface-900/60 border border-white/5 space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-brand-400 tracking-wider">Lesson Overview</span>
-                    <p className="text-xs text-slate-300 leading-relaxed">{activeLesson.summary}</p>
+                  <div className="p-4 rounded-xl bg-slate-100/70 dark:bg-surface-900/60 border border-slate-200 dark:border-white/5 space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-brand-600 dark:text-brand-400 tracking-wider">Lesson Overview</span>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{activeLesson.summary}</p>
                   </div>
 
-                  <div className="prose prose-invert prose-sm max-w-none text-slate-300 leading-relaxed space-y-4 whitespace-pre-line font-light">
+                  <div className="prose prose-slate dark:prose-invert prose-sm max-w-none text-slate-700 dark:text-slate-300 leading-relaxed space-y-4 whitespace-pre-line font-light">
                     {activeLesson.content}
                   </div>
                 </div>
@@ -552,8 +552,8 @@ export default function CourseStudyPage() {
               {activeTab === 'code' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-300 flex items-center gap-2">
-                      <Code2 className="w-4 h-4 text-brand-400" /> Interactive Python Shell (Official Statistics Environment)
+                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <Code2 className="w-4 h-4 text-brand-500 dark:text-brand-400" /> Interactive Python Shell (Official Statistics Environment)
                     </span>
                     <button 
                       onClick={handleRunCode}
@@ -564,8 +564,8 @@ export default function CourseStudyPage() {
                     </button>
                   </div>
 
-                  <div className="rounded-xl overflow-hidden border border-white/10 bg-surface-950 font-mono text-xs">
-                    <div className="p-3 bg-surface-900 border-b border-white/10 text-slate-400 text-[11px] flex justify-between">
+                  <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-900 font-mono text-xs">
+                    <div className="p-3 bg-slate-800 border-b border-slate-700 dark:border-white/10 text-slate-300 dark:text-slate-400 text-[11px] flex justify-between">
                       <span>script.py</span>
                       <span>Python 3.11</span>
                     </div>
@@ -575,8 +575,8 @@ export default function CourseStudyPage() {
                   </div>
 
                   {/* Execution Output */}
-                  <div className="rounded-xl border border-white/10 bg-surface-950 p-4 font-mono text-xs space-y-2">
-                    <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Terminal Output</div>
+                  <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-900 p-4 font-mono text-xs space-y-2">
+                    <div className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Terminal Output</div>
                     <pre className="text-slate-200 whitespace-pre-wrap leading-relaxed">
                       {customCodeOutput || activeLesson.codeOutput}
                     </pre>
@@ -589,31 +589,31 @@ export default function CourseStudyPage() {
                   <div className="flex flex-wrap gap-2">
                     <button 
                       onClick={() => setTutorQuery('Explain the Laspeyres index formula')}
-                      className="text-[11px] px-2.5 py-1 rounded-lg bg-surface-700 hover:bg-surface-600 text-slate-300 transition-colors"
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-surface-700 hover:bg-slate-200 dark:hover:bg-surface-600 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 transition-colors"
                     >
                       💡 Explain Laspeyres Formula
                     </button>
                     <button 
                       onClick={() => setTutorQuery('How do multipliers work in NSS survey datasets?')}
-                      className="text-[11px] px-2.5 py-1 rounded-lg bg-surface-700 hover:bg-surface-600 text-slate-300 transition-colors"
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-surface-700 hover:bg-slate-200 dark:hover:bg-surface-600 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 transition-colors"
                     >
                       💡 How do NSS Multipliers work?
                     </button>
                     <button 
                       onClick={() => setTutorQuery('What is the difference between CPI and IIP?')}
-                      className="text-[11px] px-2.5 py-1 rounded-lg bg-surface-700 hover:bg-surface-600 text-slate-300 transition-colors"
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-surface-700 hover:bg-slate-200 dark:hover:bg-surface-600 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/10 transition-colors"
                     >
                       💡 CPI vs IIP
                     </button>
                   </div>
 
-                  <div className="h-64 overflow-y-auto space-y-3 p-4 rounded-xl bg-surface-950 border border-white/10 text-xs">
+                  <div className="h-64 overflow-y-auto space-y-3 p-4 rounded-xl bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 text-xs">
                     {tutorMessages.map((msg, i) => (
                       <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         <div className={`p-3 rounded-2xl max-w-[85%] leading-relaxed ${
                           msg.role === 'user' 
                             ? 'bg-brand-600 text-white rounded-tr-none' 
-                            : 'bg-surface-800 text-slate-200 rounded-tl-none border border-white/5'
+                            : 'bg-white dark:bg-surface-800 text-slate-700 dark:text-slate-200 rounded-tl-none border border-slate-200 dark:border-white/5 shadow-sm'
                         }`}>
                           {msg.text}
                         </div>
@@ -638,7 +638,7 @@ export default function CourseStudyPage() {
             </div>
 
             {/* Bottom Lesson Footer Controls */}
-            <div className="p-4 border-t border-white/10 bg-surface-900/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="p-4 border-t border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-surface-900/50 flex flex-col sm:flex-row items-center justify-between gap-3">
               <button 
                 onClick={handlePrevLesson}
                 disabled={activeLessonIndex === 0}
@@ -651,7 +651,7 @@ export default function CourseStudyPage() {
                 onClick={() => handleToggleComplete(activeLesson.id)}
                 className={`btn text-xs w-full sm:w-auto ${
                   completedLessons[activeLesson.id] 
-                    ? 'bg-accent-500/20 text-accent-400 border border-accent-500/30' 
+                    ? 'bg-accent-500/20 text-accent-600 dark:text-accent-400 border border-accent-500/30' 
                     : 'btn-secondary'
                 }`}
               >

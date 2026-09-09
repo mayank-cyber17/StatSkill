@@ -50,23 +50,23 @@ export default function IGOTPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <BookOpen className="w-7 h-7 text-brand-400" /> iGOT Karmayogi Course Repository
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <BookOpen className="w-7 h-7 text-brand-600 dark:text-brand-400" /> iGOT Karmayogi Course Repository
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             Personalized e-learning recommendations mapped strictly to your identified competency gaps.
           </p>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-800 border border-white/10 text-xs text-brand-300">
-          <Sparkles className="w-4 h-4 text-brand-400" /> Auto-Synced via iGOT Mock API
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-surface-800 border border-slate-200 dark:border-white/10 text-xs text-brand-600 dark:text-brand-300">
+          <Sparkles className="w-4 h-4 text-brand-500 dark:text-brand-400" /> Auto-Synced via iGOT Mock API
         </div>
       </div>
 
       {/* Filter Bar */}
       <div className="card p-4 flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-500" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
           <input
             type="text"
             placeholder="Search courses by topic (Python, Sampling, CPI, GIS...)"
@@ -77,7 +77,7 @@ export default function IGOTPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-400" />
+          <Filter className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           <select
             value={selectedDomain}
             onChange={(e) => setSelectedDomain(e.target.value)}
@@ -98,10 +98,10 @@ export default function IGOTPage() {
           const isEnrolled = enrolledMap[course.id]
 
           return (
-            <div key={course.id} className="card-glow p-6 flex flex-col justify-between space-y-4 relative border-t-4 border-t-brand-500">
+            <div key={course.id} className="card-glow p-6 flex flex-col justify-between space-y-4 relative border-t-4 border-t-brand-500 bg-white dark:bg-surface-800">
               {course.recommended_for_gap && (
-                <div className="absolute top-3 right-3 bg-brand-500/20 text-brand-300 border border-brand-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-brand-400" /> Recommended for Gap
+                <div className="absolute top-3 right-3 bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-brand-500 dark:text-brand-400" /> Recommended for Gap
                 </div>
               )}
 
@@ -111,12 +111,12 @@ export default function IGOTPage() {
                   <span className="badge badge-neutral">{course.level}</span>
                 </div>
 
-                <h3 className="font-bold text-white text-base leading-snug pt-1">{course.title}</h3>
-                <p className="text-slate-400 text-xs line-clamp-2">{course.description}</p>
+                <h3 className="font-bold text-slate-900 dark:text-white text-base leading-snug pt-1">{course.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-xs line-clamp-2">{course.description}</p>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-white/5">
-                <div className="flex items-center justify-between text-xs text-slate-400">
+              <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-white/5">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {course.duration_hours} Hours</span>
                   <span>{course.provider}</span>
                 </div>
@@ -129,7 +129,7 @@ export default function IGOTPage() {
                     >
                       <PlayCircle className="w-4 h-4" /> Start Learning / Study Now
                     </button>
-                    <div className="text-center text-[11px] text-accent-400 font-semibold flex items-center justify-center gap-1.5 pt-0.5">
+                    <div className="text-center text-[11px] text-emerald-600 dark:text-accent-400 font-semibold flex items-center justify-center gap-1.5 pt-0.5">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Enrolled & Synced with Pathway
                     </div>
                   </div>

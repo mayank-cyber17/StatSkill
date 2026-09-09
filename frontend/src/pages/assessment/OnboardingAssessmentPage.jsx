@@ -328,16 +328,16 @@ export default function OnboardingAssessmentPage() {
     return (
       <div className="max-w-4xl mx-auto space-y-8 py-6">
         {/* Banner */}
-        <div className="card bg-gradient-brand p-8 text-white relative overflow-hidden shadow-glow">
+        <div className="card !bg-gradient-brand p-8 !text-white relative overflow-hidden shadow-glow border-none">
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold uppercase tracking-wider mb-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold uppercase tracking-wider mb-2 !text-white">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" /> Assessment Analysis Complete
               </div>
-              <h1 className="text-3xl font-display font-extrabold mb-1">
+              <h1 className="text-3xl font-display font-extrabold mb-1 !text-white">
                 Evaluation Results for {user?.full_name || 'Official'}
               </h1>
-              <p className="text-white/80 text-sm max-w-xl">
+              <p className="!text-white/90 text-sm max-w-xl">
                 Your answers have been analyzed by StatIQ AI. Your 360° competency vector, active skill gaps, and learning pathway have been saved to your profile.
               </p>
             </div>
@@ -368,56 +368,56 @@ export default function OnboardingAssessmentPage() {
           const unattemptedPct = Math.max(0, 100 - correctPct - incorrectPct)
 
           return (
-            <div className="card p-6 space-y-5 border border-white/10 bg-surface-900/90 shadow-xl">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="card p-6 space-y-5 border border-slate-200 dark:border-white/10 bg-white dark:bg-surface-900/90 shadow-xl">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
                 <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-brand-400" />
-                  <h3 className="font-display font-bold text-white text-base">
+                  <BarChart3 className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                  <h3 className="font-display font-bold text-slate-900 dark:text-white text-base">
                     Assessment Performance & Attempt Breakdown
                   </h3>
                 </div>
-                <span className="text-xs text-slate-400 font-mono">{totalQ} Total Questions</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">{totalQ} Total Questions</span>
               </div>
 
               {/* 3 Metric Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
-                  <div className="flex items-center justify-between text-xs font-bold text-emerald-400">
+                  <div className="flex items-center justify-between text-xs font-bold text-emerald-700 dark:text-emerald-400">
                     <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Correct</span>
                     <span>{correctPct}%</span>
                   </div>
-                  <div className="text-3xl font-extrabold text-white font-display">
-                    {correctQ} <span className="text-xs text-slate-400 font-normal">/ {totalQ}</span>
+                  <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-display">
+                    {correctQ} <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">/ {totalQ}</span>
                   </div>
-                  <p className="text-[11px] text-emerald-300/80">Accurately verified competencies</p>
+                  <p className="text-[11px] text-emerald-700 dark:text-emerald-300/80">Accurately verified competencies</p>
                 </div>
 
                 <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-1">
-                  <div className="flex items-center justify-between text-xs font-bold text-rose-400">
+                  <div className="flex items-center justify-between text-xs font-bold text-rose-700 dark:text-rose-400">
                     <span className="flex items-center gap-1"><XCircle className="w-4 h-4" /> Incorrect</span>
                     <span>{incorrectPct}%</span>
                   </div>
-                  <div className="text-3xl font-extrabold text-white font-display">
-                    {incorrectQ} <span className="text-xs text-slate-400 font-normal">/ {totalQ}</span>
+                  <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-display">
+                    {incorrectQ} <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">/ {totalQ}</span>
                   </div>
-                  <p className="text-[11px] text-rose-300/80">Selected incorrect option</p>
+                  <p className="text-[11px] text-rose-700 dark:text-rose-300/80">Selected incorrect option</p>
                 </div>
 
                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
-                  <div className="flex items-center justify-between text-xs font-bold text-amber-400">
+                  <div className="flex items-center justify-between text-xs font-bold text-amber-700 dark:text-amber-400">
                     <span className="flex items-center gap-1"><MinusCircle className="w-4 h-4" /> Did Not Attempt</span>
                     <span>{unattemptedPct}%</span>
                   </div>
-                  <div className="text-3xl font-extrabold text-white font-display">
-                    {unattemptedQ} <span className="text-xs text-slate-400 font-normal">/ {totalQ}</span>
+                  <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-display">
+                    {unattemptedQ} <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">/ {totalQ}</span>
                   </div>
-                  <p className="text-[11px] text-amber-300/80">Skipped without answering</p>
+                  <p className="text-[11px] text-amber-700 dark:text-amber-300/80">Skipped without answering</p>
                 </div>
               </div>
 
               {/* Stacked Bar */}
               <div className="space-y-1.5 pt-1">
-                <div className="h-3.5 w-full bg-surface-800 rounded-full overflow-hidden flex">
+                <div className="h-3.5 w-full bg-slate-200 dark:bg-surface-800 rounded-full overflow-hidden flex">
                   {correctQ > 0 && (
                     <div style={{ width: `${(correctQ / totalQ) * 100}%` }} className="h-full bg-emerald-500" />
                   )}
@@ -428,10 +428,10 @@ export default function OnboardingAssessmentPage() {
                     <div style={{ width: `${(unattemptedQ / totalQ) * 100}%` }} className="h-full bg-amber-500" />
                   )}
                 </div>
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-                  <span className="text-emerald-400">✓ {correctQ} Correct ({correctPct}%)</span>
-                  <span className="text-rose-400">✗ {incorrectQ} Incorrect ({incorrectPct}%)</span>
-                  <span className="text-amber-400">⊘ {unattemptedQ} Skipped ({unattemptedPct}%)</span>
+                <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-0.5">
+                  <span className="text-emerald-600 dark:text-emerald-400">✓ {correctQ} Correct ({correctPct}%)</span>
+                  <span className="text-rose-600 dark:text-rose-400">✗ {incorrectQ} Incorrect ({incorrectPct}%)</span>
+                  <span className="text-amber-600 dark:text-amber-400">⊘ {unattemptedQ} Skipped ({unattemptedPct}%)</span>
                 </div>
               </div>
             </div>
@@ -441,29 +441,29 @@ export default function OnboardingAssessmentPage() {
         {/* Strengths and Gaps Grid */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* Verified Strengths */}
-          <div className="card p-6 space-y-4 border-t-4 border-t-emerald-500">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="font-display font-bold text-white text-base flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" /> Verified Competency Strengths
+          <div className="card p-6 space-y-4 border-t-4 border-t-emerald-500 bg-white dark:bg-surface-800">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+              <h3 className="font-display font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400" /> Verified Competency Strengths
               </h3>
               <span className="badge badge-success text-[10px]">Validated</span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Areas where your answers demonstrated mastery of official statistical methodologies:
             </p>
             <div className="space-y-3">
               {evaluationResult.strengths && evaluationResult.strengths.length > 0 ? (
                 evaluationResult.strengths.map((s, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-surface-700/50 border border-emerald-500/20 flex items-center justify-between">
+                  <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-surface-700/50 border border-emerald-500/20 flex items-center justify-between">
                     <div>
-                      <h4 className="text-xs font-semibold text-white">{s.name}</h4>
-                      <span className="text-[10px] text-emerald-400">Proficiency Confirmed</span>
+                      <h4 className="text-xs font-semibold text-slate-900 dark:text-white">{s.name}</h4>
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">Proficiency Confirmed</span>
                     </div>
-                    <span className="font-mono font-bold text-brand-300 text-sm">{s.level} / 5.0</span>
+                    <span className="font-mono font-bold text-brand-600 dark:text-brand-300 text-sm">{s.level} / 5.0</span>
                   </div>
                 ))
               ) : (
-                <div className="p-3 rounded-xl bg-surface-700/50 border border-white/5 text-xs text-slate-400">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-surface-700/50 border border-slate-200 dark:border-white/5 text-xs text-slate-500 dark:text-slate-400">
                   Foundational competencies identified for reinforcement through curriculum modules.
                 </div>
               )}
@@ -471,32 +471,32 @@ export default function OnboardingAssessmentPage() {
           </div>
 
           {/* Identified Skill Gaps */}
-          <div className="card p-6 space-y-4 border-t-4 border-t-amber-500">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="font-display font-bold text-white text-base flex items-center gap-2">
-                <Target className="w-5 h-5 text-amber-400" /> Prioritized Skill Gaps
+          <div className="card p-6 space-y-4 border-t-4 border-t-amber-500 bg-white dark:bg-surface-800">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+              <h3 className="font-display font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                <Target className="w-5 h-5 text-amber-500 dark:text-amber-400" /> Prioritized Skill Gaps
               </h3>
               <span className="badge badge-warn text-[10px]">Action Queued</span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Specific competencies mapped for upskilling through iGOT Karmayogi & NSSTA modules:
             </p>
             <div className="space-y-3">
               {evaluationResult.skill_gaps && evaluationResult.skill_gaps.length > 0 ? (
                 evaluationResult.skill_gaps.map((g, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-surface-700/50 border border-amber-500/20 flex items-center justify-between">
+                  <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-surface-700/50 border border-amber-500/20 flex items-center justify-between">
                     <div>
-                      <h4 className="text-xs font-semibold text-white">{g.name}</h4>
-                      <span className="text-[10px] text-amber-400">Priority: {g.priority || 'HIGH'} (Delta: +{g.gap})</span>
+                      <h4 className="text-xs font-semibold text-slate-900 dark:text-white">{g.name}</h4>
+                      <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">Priority: {g.priority || 'HIGH'} (Delta: +{g.gap})</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-400 block">Current: {g.current} / 5.0</span>
-                      <span className="text-[10px] font-bold text-brand-300">Req: {g.required} / 5.0</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Current: {g.current} / 5.0</span>
+                      <span className="text-[10px] font-bold text-brand-600 dark:text-brand-300">Req: {g.required} / 5.0</span>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="p-3 rounded-xl bg-surface-700/50 border border-white/5 text-xs text-slate-400">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-surface-700/50 border border-slate-200 dark:border-white/5 text-xs text-slate-500 dark:text-slate-400">
                   No high priority gaps detected! You meet current cadre benchmarks.
                 </div>
               )}
@@ -505,11 +505,11 @@ export default function OnboardingAssessmentPage() {
         </div>
 
         {/* AI Insight Box */}
-        <div className="card p-6 border-l-4 border-l-brand-500 flex items-start gap-4">
-          <Sparkles className="w-6 h-6 text-brand-400 shrink-0 mt-1" />
+        <div className="card p-6 border-l-4 border-l-brand-500 flex items-start gap-4 bg-white dark:bg-surface-800">
+          <Sparkles className="w-6 h-6 text-brand-500 dark:text-brand-400 shrink-0 mt-1" />
           <div className="space-y-1">
-            <h4 className="text-sm font-bold text-white">StatIQ AI Analysis & Learning Path Recommendation</h4>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white">StatIQ AI Analysis & Learning Path Recommendation</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               {evaluationResult.ai_feedback}
             </p>
           </div>
@@ -587,14 +587,14 @@ export default function OnboardingAssessmentPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6 py-4">
       {/* Top Banner */}
-      <div className="text-center space-y-2 border-b border-white/10 pb-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-semibold uppercase tracking-wider">
+      <div className="text-center space-y-2 border-b border-slate-200 dark:border-white/10 pb-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-600 dark:text-brand-300 text-xs font-semibold uppercase tracking-wider">
           <Brain className="w-3.5 h-3.5" /> Official Baseline Assessment
         </div>
-        <h1 className="text-2xl font-display font-extrabold text-white">
+        <h1 className="text-2xl font-display font-extrabold text-slate-900 dark:text-white">
           {quizData?.title || 'MoSPI Official Baseline Competency & Skill Assessment'}
         </h1>
-        <p className="text-slate-400 text-xs max-w-xl mx-auto">
+        <p className="text-slate-600 dark:text-slate-400 text-xs max-w-xl mx-auto">
           Answer the following 10 scenario-based competency questions. Your results will directly configure your official competency radar, skill gaps, and learning pathway.
         </p>
       </div>
@@ -610,10 +610,10 @@ export default function OnboardingAssessmentPage() {
               onClick={() => setCurrentIdx(idx)}
               className={`h-2.5 flex-1 rounded-full transition-all ${
                 isCurrent 
-                  ? 'bg-brand-400 shadow-glow scale-y-125' 
+                  ? 'bg-brand-500 dark:bg-brand-400 shadow-glow scale-y-125' 
                   : isAnswered 
-                  ? 'bg-emerald-400' 
-                  : 'bg-surface-700'
+                  ? 'bg-emerald-500 dark:bg-emerald-400' 
+                  : 'bg-slate-200 dark:bg-surface-700'
               }`}
               title={`Question ${idx + 1}`}
             />
@@ -621,7 +621,7 @@ export default function OnboardingAssessmentPage() {
         })}
       </div>
 
-      <div className="flex items-center justify-between text-xs text-slate-400 px-2">
+      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-2">
         <span>Question {currentIdx + 1} of {questions.length}</span>
         <span>{answeredCount} / {questions.length} Answered</span>
       </div>
@@ -629,16 +629,16 @@ export default function OnboardingAssessmentPage() {
       {/* Question Card */}
       {currentQ && (
         <div className="card p-8 space-y-6 shadow-glow">
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
             <span className="badge badge-brand text-xs">
               Bloom Level: {currentQ.bloom_level || 'APPLY'}
             </span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-500 dark:text-slate-400">
               Domain: Comprehensive Official Statistics
             </span>
           </div>
 
-          <h3 className="text-lg font-bold text-white leading-relaxed">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-relaxed">
             {currentQ.question_text}
           </h3>
 
@@ -656,13 +656,15 @@ export default function OnboardingAssessmentPage() {
                   onClick={() => handleSelectOption(opt.key)}
                   className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start gap-4 ${
                     isSelected
-                      ? 'bg-brand-500/20 border-brand-500 text-white shadow-glow'
-                      : 'bg-surface-700/50 border-white/10 text-slate-300 hover:bg-surface-700 hover:border-white/20'
+                      ? 'bg-brand-50 dark:bg-brand-500/20 border-brand-500 text-brand-950 dark:text-white shadow-glow'
+                      : 'bg-slate-50/80 dark:bg-surface-700/50 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-700 hover:border-slate-300 dark:hover:border-white/20'
                   }`}
                 >
                   <div
                     className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
-                      isSelected ? 'bg-brand-500 text-white' : 'bg-surface-800 text-slate-400 border border-white/10'
+                      isSelected 
+                        ? 'bg-brand-600 text-white' 
+                        : 'bg-slate-200 dark:bg-surface-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-white/10'
                     }`}
                   >
                     {opt.key}
@@ -674,7 +676,7 @@ export default function OnboardingAssessmentPage() {
           </div>
 
           {/* Navigation Controls */}
-          <div className="flex items-center justify-between pt-6 border-t border-white/10">
+          <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-white/10">
             <button
               type="button"
               disabled={currentIdx === 0}
@@ -709,8 +711,8 @@ export default function OnboardingAssessmentPage() {
       {/* Floating Submit Shortcut if all answered */}
       {answeredCount === questions.length && !submitting && currentIdx < questions.length - 1 && (
         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
-          <span className="text-xs text-emerald-300 font-semibold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" /> All 10 questions answered!
+          <span className="text-xs text-emerald-700 dark:text-emerald-300 font-semibold flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" /> All 10 questions answered!
           </span>
           <button 
             onClick={handleSubmit}

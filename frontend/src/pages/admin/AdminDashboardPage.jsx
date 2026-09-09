@@ -43,10 +43,10 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <Shield className="w-7 h-7 text-amber-400" /> MoSPI Workforce Competency & Predictive Command Center
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <Shield className="w-7 h-7 text-amber-500 dark:text-amber-400" /> MoSPI Workforce Competency & Predictive Command Center
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             Organization-wide capacity analytics, departmental skill gap heatmaps, and predictive demand modeling.
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function AdminDashboardPage() {
             <Users className="w-5 h-5 text-brand-400" />
           </div>
           <div className="stat-value">1,240</div>
-          <div className="stat-change text-emerald-400">Across 14 Departments</div>
+          <div className="stat-change text-emerald-500 dark:text-emerald-400">Across 14 Departments</div>
         </div>
 
         <div className="stat-card">
@@ -70,26 +70,26 @@ export default function AdminDashboardPage() {
             <span className="stat-label">Avg National Score</span>
             <BarChart3 className="w-5 h-5 text-accent-400" />
           </div>
-          <div className="stat-value">3.42 <span className="text-xs font-normal text-slate-400">/ 5.0</span></div>
-          <div className="stat-change text-accent-400">+0.4 since Q1</div>
+          <div className="stat-value">3.42 <span className="text-xs font-normal text-slate-500 dark:text-slate-400">/ 5.0</span></div>
+          <div className="stat-change text-accent-500 dark:text-accent-400">+0.4 since Q1</div>
         </div>
 
         <div className="stat-card">
           <div className="flex justify-between items-start">
             <span className="stat-label">iGOT Utilization</span>
-            <Building className="w-5 h-5 text-purple-400" />
+            <Building className="w-5 h-5 text-purple-500 dark:text-purple-400" />
           </div>
-          <div className="stat-value text-purple-400">78%</div>
-          <div className="stat-change text-purple-300">890 Enrolled</div>
+          <div className="stat-value text-purple-600 dark:text-purple-400">78%</div>
+          <div className="stat-change text-purple-600 dark:text-purple-300">890 Enrolled</div>
         </div>
 
         <div className="stat-card">
           <div className="flex justify-between items-start">
             <span className="stat-label">NSSTA Nominations</span>
-            <TrendingUp className="w-5 h-5 text-amber-400" />
+            <TrendingUp className="w-5 h-5 text-amber-500 dark:text-amber-400" />
           </div>
-          <div className="stat-value text-amber-400">3</div>
-          <div className="stat-change text-amber-300">Pending Review</div>
+          <div className="stat-value text-amber-600 dark:text-amber-400">3</div>
+          <div className="stat-change text-amber-600 dark:text-amber-300">Pending Review</div>
         </div>
       </div>
 
@@ -110,7 +110,7 @@ export default function AdminDashboardPage() {
           <div className="h-72 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={demandData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" className="dark:[stroke:rgba(255,255,255,0.06)]" />
                 <XAxis dataKey="quarter" stroke="#94a3b8" tick={{ fontSize: 11 }} />
                 <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ backgroundColor: '#1e1e35', borderColor: '#ffffff20', color: '#fff', borderRadius: '12px' }} />
@@ -136,23 +136,23 @@ export default function AdminDashboardPage() {
               { dept: 'Data Processing Division (DPD)', stats: 3.5, tech: 4.1, gov: 3.5, beh: 3.8 },
               { dept: 'Economic Statistics Division', stats: 4.0, tech: 2.8, gov: 3.6, beh: 3.9 },
             ].map((row, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-surface-700/40 border border-white/5 space-y-2">
-                <div className="font-bold text-white text-sm">{row.dept}</div>
+              <div key={idx} className="p-4 rounded-xl bg-slate-100/70 dark:bg-surface-700/40 border border-slate-200 dark:border-white/5 space-y-2">
+                <div className="font-bold text-slate-900 dark:text-white text-sm">{row.dept}</div>
                 <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                  <div className="p-2 rounded bg-blue-500/10 border border-blue-500/20 text-blue-300">
-                    <span className="block text-[10px] text-slate-400">Statistical</span>
+                  <div className="p-2 rounded bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-300">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">Statistical</span>
                     <span className="font-bold">{row.stats}</span>
                   </div>
-                  <div className="p-2 rounded bg-purple-500/10 border border-purple-500/20 text-purple-300">
-                    <span className="block text-[10px] text-slate-400">Technical</span>
+                  <div className="p-2 rounded bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-300">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">Technical</span>
                     <span className="font-bold">{row.tech}</span>
                   </div>
-                  <div className="p-2 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                    <span className="block text-[10px] text-slate-400">Digital Gov</span>
+                  <div className="p-2 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">Digital Gov</span>
                     <span className="font-bold">{row.gov}</span>
                   </div>
-                  <div className="p-2 rounded bg-amber-500/10 border border-amber-500/20 text-amber-300">
-                    <span className="block text-[10px] text-slate-400">Behavioral</span>
+                  <div className="p-2 rounded bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300">
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">Behavioral</span>
                     <span className="font-bold">{row.beh}</span>
                   </div>
                 </div>
@@ -173,8 +173,8 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-surface-700/50 text-xs uppercase font-semibold text-slate-400 border-b border-white/10">
+          <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+            <thead className="bg-slate-100 dark:bg-surface-700/50 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
               <tr>
                 <th className="px-6 py-4">Officer Name</th>
                 <th className="px-6 py-4">Designation & Dept</th>
@@ -183,19 +183,19 @@ export default function AdminDashboardPage() {
                 <th className="px-6 py-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
               {pendingNominations.map((n) => {
                 const status = approvedMap[n.id]
 
                 return (
-                  <tr key={n.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white">{n.official}</td>
+                  <tr key={n.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 font-bold text-slate-900 dark:text-white">{n.official}</td>
                     <td className="px-6 py-4 text-xs">
-                      <div className="font-medium text-slate-200">{n.designation}</div>
-                      <div className="text-slate-400">{n.dept}</div>
+                      <div className="font-medium text-slate-700 dark:text-slate-200">{n.designation}</div>
+                      <div className="text-slate-500 dark:text-slate-400">{n.dept}</div>
                     </td>
-                    <td className="px-6 py-4 font-medium text-amber-300 text-xs">{n.program}</td>
-                    <td className="px-6 py-4 text-xs text-slate-400">{n.date}</td>
+                    <td className="px-6 py-4 font-medium text-amber-700 dark:text-amber-300 text-xs">{n.program}</td>
+                    <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400">{n.date}</td>
                     <td className="px-6 py-4 text-right">
                       {status === 'APPROVED' ? (
                         <span className="badge badge-success flex items-center gap-1 inline-flex">

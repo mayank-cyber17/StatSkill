@@ -207,21 +207,21 @@ export default function QuizEnginePage() {
       <div className="card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-l-brand-500">
         <div>
           <div className="flex items-center gap-2 text-xs text-brand-300 font-semibold uppercase tracking-wider mb-1">
-            <FileQuestion className="w-4 h-4 text-brand-400" /> Grounded Competency Assessment
+            <FileQuestion className="w-4 h-4 text-brand-500 dark:text-brand-400" /> Grounded Competency Assessment
           </div>
-          <h1 className="text-xl font-display font-bold text-white">
+          <h1 className="text-xl font-display font-bold text-slate-900 dark:text-white">
             {quizData?.title || 'Competency Verification Quiz'}
           </h1>
-          <div className="flex items-center gap-3 text-xs text-slate-400 mt-1">
+          <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>{questions.length} Questions</span>
             <span>•</span>
-            <span className="text-emerald-400 font-medium">Answered: {answeredCount}/{questions.length}</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-medium">Answered: {answeredCount}/{questions.length}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-700 font-mono font-bold text-brand-300 text-sm border border-white/10">
-            <Clock className="w-4 h-4 text-brand-400" /> {formatTime(timeLeft)}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-surface-700 font-mono font-bold text-brand-600 dark:text-brand-300 text-sm border border-slate-200 dark:border-white/10">
+            <Clock className="w-4 h-4 text-brand-500 dark:text-brand-400" /> {formatTime(timeLeft)}
           </div>
           <button
             onClick={handleSubmit}
@@ -234,9 +234,9 @@ export default function QuizEnginePage() {
       </div>
 
       {/* Question Jump Palette */}
-      <div className="card p-4">
-        <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
-          <span className="font-semibold text-slate-300">Question Navigation Palette</span>
+      <div className="card p-4 bg-white dark:bg-surface-800">
+        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
+          <span className="font-semibold text-slate-800 dark:text-slate-300">Question Navigation Palette</span>
           <span>Click any number to jump</span>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -251,8 +251,8 @@ export default function QuizEnginePage() {
                   isCurrent
                     ? 'bg-brand-500 text-white ring-2 ring-brand-300 shadow-glow'
                     : isAnswered
-                    ? 'bg-accent-500/20 text-accent-400 border border-accent-500/40'
-                    : 'bg-surface-700 text-slate-400 hover:text-white hover:bg-surface-600'
+                    ? 'bg-emerald-500/15 text-emerald-600 dark:text-accent-400 border border-emerald-500/40'
+                    : 'bg-slate-100 dark:bg-surface-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-surface-600 border border-slate-200 dark:border-white/5'
                 }`}
               >
                 {idx + 1}
@@ -263,9 +263,9 @@ export default function QuizEnginePage() {
       </div>
 
       {/* Active Question Card */}
-      <div className="card p-8 space-y-6">
-        <div className="flex items-center justify-between text-xs text-slate-400 border-b border-white/10 pb-4">
-          <span className="font-semibold text-brand-300">
+      <div className="card p-8 space-y-6 bg-white dark:bg-surface-800">
+        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10 pb-4">
+          <span className="font-semibold text-brand-600 dark:text-brand-300">
             Question {currentIdx + 1} of {questions.length}
           </span>
           <span className="badge badge-brand">
@@ -273,7 +273,7 @@ export default function QuizEnginePage() {
           </span>
         </div>
 
-        <h3 className="text-lg font-semibold text-white leading-relaxed">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white leading-relaxed">
           {currentQ?.question_text}
         </h3>
 
@@ -297,7 +297,7 @@ export default function QuizEnginePage() {
                     className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-colors ${
                       isSelected
                         ? 'bg-brand-500 text-white'
-                        : 'bg-surface-600 text-slate-400'
+                        : 'bg-slate-100 dark:bg-surface-600 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10'
                     }`}
                   >
                     {opt.key}
@@ -310,7 +310,7 @@ export default function QuizEnginePage() {
         </div>
 
         {/* Navigation buttons */}
-        <div className="flex justify-between items-center pt-6 border-t border-white/10">
+        <div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-white/10">
           <button
             onClick={() => setCurrentIdx((prev) => Math.max(0, prev - 1))}
             disabled={currentIdx === 0}

@@ -24,10 +24,10 @@ export default function TrainerQuizzesPage() {
     <div className="space-y-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <FileQuestion className="w-7 h-7 text-purple-400" /> Manage AI Generated & Official Quizzes
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <FileQuestion className="w-7 h-7 text-purple-500 dark:text-purple-400" /> Manage AI Generated & Official Quizzes
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             Review, edit, publish, or preview AI-synthesized multiple choice question banks.
           </p>
         </div>
@@ -39,8 +39,8 @@ export default function TrainerQuizzesPage() {
 
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-surface-700/50 text-xs uppercase font-semibold text-slate-400 border-b border-white/10">
+          <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+            <thead className="bg-slate-100 dark:bg-surface-700/50 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
               <tr>
                 <th className="px-6 py-4">Quiz Title</th>
                 <th className="px-6 py-4">Curriculum / Source Material</th>
@@ -49,14 +49,14 @@ export default function TrainerQuizzesPage() {
                 <th className="px-6 py-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
               {quizzes.map((q) => (
-                <tr key={q.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4 font-bold text-white max-w-xs truncate">{q.title}</td>
-                  <td className="px-6 py-4 text-xs font-mono text-slate-400 max-w-xs truncate">
+                <tr key={q.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                  <td className="px-6 py-4 font-bold text-slate-900 dark:text-white max-w-xs truncate">{q.title}</td>
+                  <td className="px-6 py-4 text-xs font-mono text-slate-500 dark:text-slate-400 max-w-xs truncate">
                     {q.description || (q.document_id ? `Document #${q.document_id}` : 'Official MoSPI Curriculum')}
                   </td>
-                  <td className="px-6 py-4 font-mono font-bold text-brand-300">
+                  <td className="px-6 py-4 font-mono font-bold text-brand-600 dark:text-brand-300">
                     {q.total_questions || 10} MCQs
                   </td>
                   <td className="px-6 py-4">

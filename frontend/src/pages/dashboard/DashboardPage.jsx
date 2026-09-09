@@ -2,6 +2,7 @@ import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { profileAPI, gapAPI, learningPathAPI, quizAPI } from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
+import { useThemeStore } from '../../stores/themeStore'
 import { 
   Brain, Target, Map as MapIcon, FileQuestion, BookOpen, GraduationCap, 
   ArrowRight, Award, CheckCircle2, Clock, Sparkles
@@ -11,6 +12,8 @@ import { Link } from 'react-router-dom'
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user)
+  const theme = useThemeStore((state) => state.theme)
+  const isDark = theme !== 'light'
 
   const { data: compRes, isLoading: compLoading } = useQuery({
     queryKey: ['competency-profile'],
@@ -126,10 +129,10 @@ export default function DashboardPage() {
       {!hasAssessed && (
         <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-amber-400 shrink-0" />
+            <Sparkles className="w-8 h-8 text-amber-500 dark:text-amber-400 shrink-0" />
             <div>
-              <h4 className="font-bold text-white text-base">Baseline Competency Assessment Required</h4>
-              <p className="text-slate-300 text-xs mt-0.5">
+              <h4 className="font-bold text-slate-900 dark:text-white text-base">Baseline Competency Assessment Required</h4>
+              <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
                 Complete your official 10-question evaluation to unlock your personalized radar matrix, skill gaps, and learning pathway.
               </p>
             </div>
@@ -142,17 +145,17 @@ export default function DashboardPage() {
       )}
 
       {/* Welcome Banner */}
-      <div className="card bg-gradient-brand p-8 text-white relative overflow-hidden shadow-glow">
+      <div className="card !bg-gradient-brand p-8 !text-white relative overflow-hidden shadow-glow border-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold uppercase tracking-wider mb-3 !text-white">
               <Sparkles className="w-3.5 h-3.5" /> Official Competency Portal
             </div>
-            <h1 className="text-3xl font-display font-extrabold mb-2">
+            <h1 className="text-3xl font-display font-extrabold mb-2 !text-white">
               Welcome, {user?.full_name || 'Statistical Official'}!
             </h1>
-            <p className="text-white/80 text-sm max-w-xl">
+            <p className="!text-white/90 text-sm max-w-xl">
               {hasAssessed
                 ? `Your competency profile is active. You have ${gaps.length} active skill gaps identified and ${learningItems.length} customized learning pathway modules queued.`
                 : 'Your official account is active. Complete your baseline assessment to calibrate your official skills and customize your training pathway.'}
@@ -161,11 +164,11 @@ export default function DashboardPage() {
 
           <div className="flex gap-3">
             {hasAssessed ? (
-              <Link to="/learning-path" className="btn bg-white text-brand-700 hover:bg-slate-100 font-bold text-sm shadow-lg">
+              <Link to="/learning-path" className="btn bg-white !text-brand-700 hover:bg-slate-100 font-bold text-sm shadow-lg">
                 Continue Learning Pathway <ArrowRight className="w-4 h-4" />
               </Link>
             ) : (
-              <Link to="/assessment" className="btn bg-white text-brand-700 hover:bg-slate-100 font-bold text-sm shadow-lg">
+              <Link to="/assessment" className="btn bg-white !text-brand-700 hover:bg-slate-100 font-bold text-sm shadow-lg">
                 Start Baseline Assessment <ArrowRight className="w-4 h-4" />
               </Link>
             )}
@@ -229,11 +232,27 @@ export default function DashboardPage() {
           <div className="h-72 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="80%" data={formattedRadar}>
-                <PolarGrid stroke="#ffffff20" />
-                <PolarAngleAxis dataKey="subject" stroke="#a5b4fc" tick={{ fill: '#cbd5e1', fontSize: 11 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 5]} stroke="#ffffff30" />
+                <PolarGrid stroke={isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.12)"} />
+                <PolarAngleAxis 
+                  dataKey="subject" 
+                  stroke={isDark ? "#a5b4fc" : "#4f46e5"} 
+                  tick={{ fill: isDark ? '#cbd5e1' : '#1e293b', fontSize: 11, fontWeight: 600 }} 
+                />
+                <PolarRadiusAxis 
+                  angle={30} 
+                  domain={[0, 5]} 
+                  stroke={isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.15)"} 
+                  tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 10 }}
+                />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#16162a', borderColor: '#ffffff20', borderRadius: '0.75rem', color: '#fff', fontSize: '12px' }}
+                  contentStyle={{ 
+                    backgroundColor: isDark ? '#16162a' : '#ffffff', 
+                    borderColor: isDark ? 'rgba(255,255,255,0.15)' : '#e2e8f0', 
+                    borderRadius: '0.75rem', 
+                    color: isDark ? '#fff' : '#0f172a', 
+                    fontSize: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }}
                   formatter={(value) => [`${value} / 5.0`, 'Competency Level']}
                 />
                 <Radar name="Current Competency" dataKey="A" stroke="#6366f1" fill="#6366f1" fillOpacity={0.5} />
@@ -250,19 +269,19 @@ export default function DashboardPage() {
                 <h3 className="section-title text-lg">Top Priority Skill Gaps</h3>
                 <p className="section-subtitle">Evaluated against target designation standards</p>
               </div>
-              <Link to="/skill-gap" className="text-xs text-brand-400 font-semibold hover:underline">
+              <Link to="/skill-gap" className="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline">
                 Gap Matrix →
               </Link>
             </div>
 
             <div className="space-y-4">
               {gaps.slice(0, 3).map((gap, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-surface-700/50 border border-white/5 space-y-2">
+                <div key={idx} className="p-4 rounded-xl bg-slate-100/80 dark:bg-surface-700/50 border border-slate-200/80 dark:border-white/5 space-y-2">
                   <div className="flex justify-between items-center text-sm font-semibold">
-                    <span className="text-white">{gap.name}</span>
+                    <span className="text-slate-900 dark:text-white">{gap.name}</span>
                     <span className="badge badge-danger">Priority {gap.priority || idx + 1}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs text-slate-400">
+                  <div className="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
                     <span>Current: {gap.current} / 5.0</span>
                     <span>Required: {gap.required} / 5.0</span>
                   </div>
@@ -287,28 +306,28 @@ export default function DashboardPage() {
             <h3 className="section-title text-lg">Active Personalized Pathway</h3>
             <p className="section-subtitle">AI Recommended Sequence of iGOT Courses & NSSTA Trainings</p>
           </div>
-          <Link to="/learning-path" className="text-xs text-brand-400 font-semibold hover:underline">
+          <Link to="/learning-path" className="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline">
             View Full Pathway →
           </Link>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
           {learningItems.map((item, idx) => (
-            <div key={idx} className="card-glow p-5 space-y-3 relative border-t-4 border-t-brand-500">
+            <div key={idx} className="card-glow p-5 space-y-3 relative border-t-4 border-t-brand-500 bg-white dark:bg-surface-800">
               <div className="flex items-center justify-between text-xs">
                 <span className="badge badge-brand">{item.type}</span>
-                <span className="text-slate-400 flex items-center gap-1">
+                <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {item.estHours}h
                 </span>
               </div>
-              <h4 className="font-semibold text-white text-sm line-clamp-2">{item.title}</h4>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm line-clamp-2">{item.title}</h4>
               <div className="pt-2 flex items-center justify-between text-xs">
-                <span className={item.status === 'COMPLETED' ? 'text-accent-400 font-semibold' : 'text-slate-400'}>
+                <span className={item.status === 'COMPLETED' ? 'text-emerald-600 dark:text-accent-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}>
                   {item.status}
                 </span>
                 <Link 
                   to={item.type === 'IGOT_COURSE' ? '/learn/IGOT001' : item.type === 'NSSTA_TRAINING' ? '/nssta' : '/quizzes'} 
-                  className="text-brand-400 hover:underline font-medium"
+                  className="text-brand-600 dark:text-brand-400 hover:underline font-medium"
                 >
                   Launch →
                 </Link>

@@ -33,12 +33,6 @@
     min-height: 100vh;
   }
 
-  /* Smooth theme transitions */
-  body, body * {
-    transition-property: background-color, border-color, color;
-    transition-duration: 150ms;
-    transition-timing-function: ease;
-  }
 
   /* Scrollbars */
   ::-webkit-scrollbar { width: 6px; }
@@ -58,6 +52,15 @@
     border-color: rgba(226,232,240,0.8);
     box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
     color: #1e293b;
+  }
+  /* Prevent light mode card rule from turning gradient banners white and breaking text contrast */
+  html.light .card.bg-gradient-brand,
+  html.light .card.bg-gradient-to-r,
+  html.light .card.bg-gradient-to-tr,
+  html.light .card.bg-brand-600 {
+    background: var(--gradient-brand) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
   }
 
   .card-glow {
@@ -246,6 +249,35 @@
   html.light .domain-bg-technical { background:#faf5ff; border-color:#ddd6fe; }
   html.light .domain-bg-digital { background:#ecfdf5; border-color:#a7f3d0; }
   html.light .domain-bg-behavioural { background:#fffbeb; border-color:#fde68a; }
+
+  /* === SELECT (light mode) === */
+  html.light select.input,
+  html.light select {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #111827;
+  }
+  html.light select option {
+    background: #ffffff;
+    color: #111827;
+  }
+
+  /* === CUSTOM SCROLLBAR (light mode) === */
+  html.light .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+  html.light .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; }
+  html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  /* === TABLE ROWS (light mode) === */
+  html.light tbody tr:hover { background: #f8fafc; }
+
+  /* === TOOLTIP (light mode override for inline dark tooltips) === */
+  html.light .recharts-tooltip-wrapper .recharts-default-tooltip {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    color: #1e293b !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
 }
 
 @layer utilities {

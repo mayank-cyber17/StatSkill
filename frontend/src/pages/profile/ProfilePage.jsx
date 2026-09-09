@@ -58,10 +58,10 @@ export default function ProfilePage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-display font-bold text-white">{profile.full_name}</h1>
+              <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white">{profile.full_name}</h1>
               <span className="badge badge-brand">{profile.designation}</span>
             </div>
-            <p className="text-slate-400 text-xs mt-1">{profile.department} • {profile.organization}</p>
+            <p className="text-slate-600 dark:text-slate-400 text-xs mt-1">{profile.department} • {profile.organization}</p>
             <p className="text-slate-500 text-[11px] mt-0.5">{profile.educational_qualification} • {profile.years_experience} Years Experience</p>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function ProfilePage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="section-title text-xl">Assessed Competencies by Domain</h2>
-          <span className="text-xs text-slate-400">Scale: 1 (Beginner) to 5 (Expert)</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400">Scale: 1 (Beginner) to 5 (Expert)</span>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -83,22 +83,22 @@ export default function ProfilePage() {
             const domainCompetencies = competencies.filter(c => c.domain?.toLowerCase().includes(dom.toLowerCase()))
             return (
               <div key={dom} className="card p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <h3 className="font-display font-bold text-white text-base flex items-center gap-2">
-                    <Brain className={`w-4 h-4 ${dom === 'Statistical' ? 'text-blue-400' : dom === 'Technical' ? 'text-purple-400' : dom === 'Digital Governance' ? 'text-emerald-400' : 'text-amber-400'}`} />
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+                  <h3 className="font-display font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                    <Brain className={`w-4 h-4 ${dom === 'Statistical' ? 'text-blue-500 dark:text-blue-400' : dom === 'Technical' ? 'text-purple-500 dark:text-purple-400' : dom === 'Digital Governance' ? 'text-emerald-500 dark:text-emerald-400' : 'text-amber-500 dark:text-amber-400'}`} />
                     {dom} Competencies
                   </h3>
-                  <span className="text-xs text-slate-400">{domainCompetencies.length} Skills</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{domainCompetencies.length} Skills</span>
                 </div>
 
                 <div className="space-y-4">
                   {domainCompetencies.map((comp, idx) => (
                     <div key={idx} className="space-y-1.5">
                       <div className="flex justify-between items-center text-xs">
-                        <span className="font-semibold text-slate-200">{comp.name}</span>
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">{comp.name}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] text-slate-500 font-mono">[{comp.method || 'AI_INFERRED'}]</span>
-                          <span className="font-bold text-brand-300">{comp.level} / 5.0</span>
+                          <span className="font-bold text-brand-600 dark:text-brand-300">{comp.level} / 5.0</span>
                         </div>
                       </div>
 

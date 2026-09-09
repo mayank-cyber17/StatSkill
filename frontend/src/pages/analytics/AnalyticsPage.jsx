@@ -1,10 +1,14 @@
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { analyticsAPI } from '../../services/api'
+import { useThemeStore } from '../../stores/themeStore'
 import { BarChart3, TrendingUp, Award, Clock, BookOpen } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 
 export default function AnalyticsPage() {
+  const theme = useThemeStore((state) => state.theme)
+  const isDark = theme !== 'light'
+
   const { data: analyticsRes } = useQuery({
     queryKey: ['personal-analytics'],
     queryFn: analyticsAPI.getPersonal,
@@ -29,10 +33,10 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-          <BarChart3 className="w-7 h-7 text-brand-400" /> Individual Learner Analytics
+        <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+          <BarChart3 className="w-7 h-7 text-brand-600 dark:text-brand-400" /> Individual Learner Analytics
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
           Track competency growth over time, learning hours logged, and quiz evaluation trajectory.
         </p>
       </div>
@@ -41,38 +45,38 @@ export default function AnalyticsPage() {
         <div className="stat-card">
           <span className="stat-label">Learning Hours</span>
           <div className="stat-value">{learningHours} <span className="text-xs font-normal text-slate-400">Hrs</span></div>
-          <div className="stat-change text-emerald-400">Grounded curriculum</div>
+          <div className="stat-change text-emerald-500 dark:text-emerald-400">Grounded curriculum</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Courses Completed</span>
-          <div className="stat-value text-brand-400">{coursesDone}</div>
-          <div className="stat-change text-slate-400">iGOT / NSSTA modules</div>
+          <div className="stat-value text-brand-600 dark:text-brand-400">{coursesDone}</div>
+          <div className="stat-change text-slate-500 dark:text-slate-400">iGOT / NSSTA modules</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Quiz Avg Score</span>
-          <div className="stat-value text-accent-400">{avgQuizScore}%</div>
-          <div className="stat-change text-emerald-400">{totalQuizzes} Assessment(s)</div>
+          <div className="stat-value text-emerald-600 dark:text-accent-400">{avgQuizScore}%</div>
+          <div className="stat-change text-emerald-500 dark:text-emerald-400">{totalQuizzes} Assessment(s)</div>
         </div>
 
         <div className="stat-card">
           <span className="stat-label">Skill Upgrades</span>
-          <div className="stat-value text-purple-400">+3</div>
-          <div className="stat-change text-purple-300">Levels calibrated</div>
+          <div className="stat-value text-purple-600 dark:text-purple-400">+3</div>
+          <div className="stat-change text-purple-500 dark:text-purple-300">Levels calibrated</div>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        <div className="card p-6 space-y-4">
+        <div className="card p-6 space-y-4 bg-white dark:bg-surface-800">
           <h3 className="section-title text-lg">Competency Score Growth Trajectory</h3>
           <div className="h-64 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={compProgressData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis dataKey="month" stroke="#94a3b8" tick={{ fontSize: 11 }} />
-                <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} domain={[0, 5]} />
-                <Tooltip contentStyle={{ backgroundColor: '#1e1e35', borderColor: '#ffffff20', color: '#fff', borderRadius: '12px' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"} />
+                <XAxis dataKey="month" stroke={isDark ? "#94a3b8" : "#64748b"} tick={{ fontSize: 11 }} />
+                <YAxis stroke={isDark ? "#94a3b8" : "#64748b"} tick={{ fontSize: 11 }} domain={[0, 5]} />
+                <Tooltip contentStyle={{ backgroundColor: isDark ? '#1e1e35' : '#ffffff', borderColor: isDark ? 'rgba(255,255,255,0.15)' : '#e2e8f0', color: isDark ? '#fff' : '#0f172a', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                 <Line type="monotone" dataKey="Statistical" stroke="#6366f1" strokeWidth={3} />
                 <Line type="monotone" dataKey="Technical" stroke="#a855f7" strokeWidth={3} />
                 <Line type="monotone" dataKey="Governance" stroke="#10b981" strokeWidth={3} />
@@ -81,15 +85,15 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        <div className="card p-6 space-y-4">
+        <div className="card p-6 space-y-4 bg-white dark:bg-surface-800">
           <h3 className="section-title text-lg">Quiz Performance Scores</h3>
           <div className="h-64 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={quizScoresData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                <XAxis dataKey="quiz" stroke="#94a3b8" tick={{ fontSize: 10 }} />
-                <YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} domain={[0, 100]} />
-                <Tooltip contentStyle={{ backgroundColor: '#1e1e35', borderColor: '#ffffff20', color: '#fff', borderRadius: '12px' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)"} />
+                <XAxis dataKey="quiz" stroke={isDark ? "#94a3b8" : "#64748b"} tick={{ fontSize: 10 }} />
+                <YAxis stroke={isDark ? "#94a3b8" : "#64748b"} tick={{ fontSize: 11 }} domain={[0, 100]} />
+                <Tooltip contentStyle={{ backgroundColor: isDark ? '#1e1e35' : '#ffffff', borderColor: isDark ? 'rgba(255,255,255,0.15)' : '#e2e8f0', color: isDark ? '#fff' : '#0f172a', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                 <Bar dataKey="score" fill="#10b981" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>

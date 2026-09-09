@@ -33,20 +33,20 @@ export default function LearningPathPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <Map className="w-7 h-7 text-purple-400" /> AI-Personalized Learning Pathway
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <Map className="w-7 h-7 text-purple-600 dark:text-purple-400" /> AI-Personalized Learning Pathway
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             Sequenced trajectory combining iGOT e-learning modules and NSSTA classroom/hybrid training programs.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <div className="text-xs text-slate-400">Pathway Completion</div>
-            <div className="text-lg font-bold font-mono text-purple-400">{path.completion_percentage}%</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400">Pathway Completion</div>
+            <div className="text-lg font-bold font-mono text-purple-600 dark:text-purple-400">{path.completion_percentage}%</div>
           </div>
-          <div className="w-24 h-2 rounded-full bg-surface-700 overflow-hidden">
+          <div className="w-24 h-2 rounded-full bg-slate-200 dark:bg-surface-700 overflow-hidden">
             <div className="h-full bg-purple-500 rounded-full" style={{ width: `${path.completion_percentage}%` }} />
           </div>
         </div>
@@ -54,14 +54,14 @@ export default function LearningPathPage() {
 
       {/* AI Reasoning Card */}
       <div className="card p-6 border-l-4 border-l-purple-500 bg-purple-500/5 space-y-2">
-        <div className="flex items-center gap-2 text-xs font-semibold text-purple-300 uppercase tracking-wider">
-          <Sparkles className="w-4 h-4 text-purple-400" /> StatIQ AI Recommendation Logic
+        <div className="flex items-center gap-2 text-xs font-semibold text-purple-700 dark:text-purple-300 uppercase tracking-wider">
+          <Sparkles className="w-4 h-4 text-purple-500 dark:text-purple-400" /> StatIQ AI Recommendation Logic
         </div>
-        <p className="text-slate-200 text-sm leading-relaxed">{path.ai_reasoning}</p>
+        <p className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed">{path.ai_reasoning}</p>
       </div>
 
       {/* Timeline View */}
-      <div className="space-y-6 relative before:absolute before:inset-0 before:left-6 before:w-0.5 before:bg-white/10">
+      <div className="space-y-6 relative before:absolute before:inset-0 before:left-6 before:w-0.5 before:bg-slate-200 dark:before:bg-white/10">
         {path.items.map((item, idx) => {
           const isDone = item.status === 'COMPLETED'
           const isInProgress = item.status === 'IN_PROGRESS'
@@ -72,36 +72,36 @@ export default function LearningPathPage() {
           return (
             <div key={item.id} className="relative flex items-start gap-6 pl-2">
               {/* Timeline Marker */}
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10 font-bold text-sm ${isDone ? 'bg-accent-500 text-white shadow-glow' : isInProgress ? 'bg-brand-500 text-white shadow-glow ring-4 ring-brand-500/20' : 'bg-surface-700 text-slate-400 border border-white/10'}`}>
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10 font-bold text-sm ${isDone ? 'bg-accent-500 text-white shadow-glow' : isInProgress ? 'bg-brand-500 text-white shadow-glow ring-4 ring-brand-500/20' : 'bg-slate-100 dark:bg-surface-700 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-white/10'}`}>
                 {isDone ? <CheckCircle2 className="w-5 h-5" /> : idx + 1}
               </div>
 
               {/* Module Card */}
-              <div className={`card-glow flex-1 space-y-0 overflow-hidden ${isInProgress ? 'border-brand-500/50 bg-brand-500/5' : ''}`}>
+              <div className={`card-glow flex-1 space-y-0 overflow-hidden ${isInProgress ? 'border-brand-500/50 bg-brand-500/5' : 'bg-white dark:bg-surface-800'}`}>
                 <div className="p-6 space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span className={`badge ${isIGOT ? 'badge-brand' : item.item_type === 'NSSTA_TRAINING' ? 'badge-warn' : 'badge-success'}`}>
                         {isIGOT ? 'iGOT Karmayogi' : item.item_type === 'NSSTA_TRAINING' ? 'NSSTA TPAC' : 'AI Assessment'}
                       </span>
-                      <span className="text-xs text-slate-400 flex items-center gap-1">
+                      <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" /> {item.estimated_hours} Hours
                       </span>
                     </div>
-                    <span className={`text-xs font-semibold ${isDone ? 'text-accent-400' : isInProgress ? 'text-brand-300' : 'text-slate-500'}`}>
+                    <span className={`text-xs font-semibold ${isDone ? 'text-accent-500' : isInProgress ? 'text-brand-600 dark:text-brand-300' : 'text-slate-500 dark:text-slate-400'}`}>
                       {item.status}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white">{item.item_title}</h3>
-                  <p className="text-xs text-slate-400">Provider: {item.provider}</p>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">{item.item_title}</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Provider: {item.provider}</p>
 
                   <div className="pt-2 flex flex-wrap items-center gap-2 justify-end">
                     {/* Preview Video button — only for IGOT courses */}
                     {isIGOT && (
                       <button
                         onClick={() => setExpandedVideoId(isVideoOpen ? null : item.id)}
-                        className="btn btn-ghost text-xs flex items-center gap-1.5 text-brand-300 hover:text-white border border-brand-500/20 py-1.5 px-3"
+                        className="btn btn-ghost text-xs flex items-center gap-1.5 text-brand-600 dark:text-brand-300 hover:text-brand-700 dark:hover:text-white border border-brand-500/20 py-1.5 px-3"
                       >
                         <PlayCircle className="w-3.5 h-3.5" />
                         {isVideoOpen ? 'Hide Video' : 'Preview Video'}
@@ -128,7 +128,7 @@ export default function LearningPathPage() {
 
                 {/* Collapsible inline video preview */}
                 {isIGOT && isVideoOpen && (
-                  <div className="border-t border-white/10">
+                  <div className="border-t border-slate-200 dark:border-white/10">
                     <LearningVideo
                       topic={topic}
                       lessonTitle={item.item_title}

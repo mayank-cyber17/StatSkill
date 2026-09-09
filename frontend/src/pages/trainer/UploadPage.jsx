@@ -97,22 +97,22 @@ export default function UploadPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-          <Upload className="w-7 h-7 text-purple-400" /> Upload Material & AI MCQ Generator
+        <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+          <Upload className="w-7 h-7 text-purple-500 dark:text-purple-400" /> Upload Material & AI MCQ Generator
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
           Grounding Pipeline: Upload PDF/DOCX/PPTX → Text Cleaning → Chunking → ChromaDB Embedding → Gemini 1.5 Flash MCQ Synthesis.
         </p>
       </div>
 
       {/* Step 1: Upload Card */}
       <div className="card p-8 space-y-6">
-        <h3 className="text-lg font-display font-bold text-white flex items-center gap-2">
-          <FileText className="w-5 h-5 text-brand-400" /> Step 1: Upload Official Learning Document
+        <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <FileText className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Step 1: Upload Official Learning Document
         </h3>
 
         <form onSubmit={handleUpload} className="space-y-6">
-          <div className="border-2 border-dashed border-white/20 hover:border-brand-500/50 rounded-2xl p-8 text-center bg-surface-700/30 hover:bg-brand-500/5 transition-all cursor-pointer relative">
+          <div className="border-2 border-dashed border-slate-300 dark:border-white/20 hover:border-brand-500/50 rounded-2xl p-8 text-center bg-slate-50/50 dark:bg-surface-700/30 hover:bg-brand-500/5 transition-all cursor-pointer relative">
             <input
               type="file"
               accept=".pdf,.docx,.pptx"
@@ -120,18 +120,18 @@ export default function UploadPage() {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             <div className="flex flex-col items-center gap-3">
-              <div className="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
+              <div className="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-500 dark:text-brand-400">
                 <Upload className="w-7 h-7" />
               </div>
               {file ? (
                 <div>
-                  <div className="font-bold text-white text-base">{file.name}</div>
-                  <div className="text-xs text-brand-300 font-mono mt-1">{(file.size / (1024 * 1024)).toFixed(2)} MB • Ready for processing</div>
+                  <div className="font-bold text-slate-900 dark:text-white text-base">{file.name}</div>
+                  <div className="text-xs text-brand-600 dark:text-brand-300 font-mono mt-1">{(file.size / (1024 * 1024)).toFixed(2)} MB • Ready for processing</div>
                 </div>
               ) : (
                 <div>
-                  <div className="font-bold text-white text-base">Drag & drop learning material here</div>
-                  <div className="text-xs text-slate-400 mt-1">Supports PDF, DOCX, and PPTX up to 50MB</div>
+                  <div className="font-bold text-slate-900 dark:text-white text-base">Drag & drop learning material here</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Supports PDF, DOCX, and PPTX up to 50MB</div>
                 </div>
               )}
             </div>
@@ -159,8 +159,8 @@ export default function UploadPage() {
       {docStatus === 'READY' && (
         <div className="card p-8 space-y-6 border-t-4 border-t-purple-500 animate-slide-up">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-display font-bold text-white flex items-center gap-2">
-              <Brain className="w-5 h-5 text-purple-400" /> Step 2: Configure AI MCQ Generation Pipeline
+            <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Brain className="w-5 h-5 text-purple-500 dark:text-purple-400" /> Step 2: Configure AI MCQ Generation Pipeline
             </h3>
             <span className="badge badge-brand">Grounded RAG Pipeline</span>
           </div>
@@ -179,7 +179,7 @@ export default function UploadPage() {
             <div className="form-group">
               <label className="input-label flex items-center justify-between">
                 <span>Number of MCQs to Generate</span>
-                <span className="text-brand-400 font-bold text-base">{numQuestions} Questions</span>
+                <span className="text-brand-600 dark:text-brand-400 font-bold text-base">{numQuestions} Questions</span>
               </label>
               {/* Quick preset buttons */}
               <div className="flex gap-2 mb-3 flex-wrap">
@@ -191,7 +191,7 @@ export default function UploadPage() {
                     className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all ${
                       numQuestions === n && !customNum
                         ? 'bg-brand-500 border-brand-400 text-white shadow-glow'
-                        : 'bg-surface-700 border-white/10 text-slate-300 hover:border-brand-500/50 hover:text-white'
+                        : 'bg-slate-100 dark:bg-surface-700 border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:border-brand-500/50 hover:text-brand-700 dark:hover:text-white'
                     }`}
                   >
                     {n}
@@ -235,8 +235,8 @@ export default function UploadPage() {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-slate-300 leading-relaxed">
-            <strong className="text-purple-300">Strict Hallucination Guardrail:</strong> The LLM pipeline enforces context constraints ensuring generated questions evaluate <em>only</em> facts present in the uploaded material.
+          <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+            <strong className="text-purple-700 dark:text-purple-300">Strict Hallucination Guardrail:</strong> The LLM pipeline enforces context constraints ensuring generated questions evaluate <em>only</em> facts present in the uploaded material.
           </div>
 
           <button

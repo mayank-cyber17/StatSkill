@@ -228,17 +228,17 @@ export default function QuizResultPage() {
       </div>
 
       {/* ── NEW DEDICATED SECTION: Quiz Performance & Attempt Breakdown ── */}
-      <div className="card p-6 sm:p-7 space-y-6 border border-white/10 bg-surface-900/90 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
+      <div className="card p-6 sm:p-7 space-y-6 border border-slate-200 dark:border-white/10 bg-white dark:bg-surface-900/90 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-white/10 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400">
+            <div className="w-9 h-9 rounded-xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-600 dark:text-brand-400">
               <BarChart3 className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-display font-bold text-white">
+              <h3 className="text-lg font-display font-bold text-slate-900 dark:text-white">
                 Attempt Breakdown & Performance Analytics
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Summary of correct answers, wrong answers, and skipped questions
               </p>
             </div>
@@ -246,8 +246,8 @@ export default function QuizResultPage() {
           <div className="flex items-center gap-2">
             <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${
               passed
-                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                : 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+                ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
+                : 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30'
             }`}>
               {passed ? 'Passed (≥ 60%)' : 'Needs Review (< 60%)'}
             </span>
@@ -259,22 +259,22 @@ export default function QuizResultPage() {
           {/* 1. Correct Card */}
           <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2 relative overflow-hidden transition-all hover:bg-emerald-500/15">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4" /> Correct
               </span>
-              <span className="text-[11px] font-mono font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full">
                 {correctPercent}%
               </span>
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-display font-extrabold text-white">
+              <span className="text-4xl font-display font-extrabold text-slate-900 dark:text-white">
                 {correctQuestions.length}
               </span>
-              <span className="text-xs text-slate-400 font-medium">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 / {totalQuestions} questions
               </span>
             </div>
-            <p className="text-[11px] text-emerald-300/80 leading-snug">
+            <p className="text-[11px] text-emerald-700 dark:text-emerald-300/80 leading-snug">
               Answered accurately and validated against curriculum benchmarks.
             </p>
           </div>
@@ -282,22 +282,22 @@ export default function QuizResultPage() {
           {/* 2. Incorrect Card */}
           <div className="p-5 rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-2 relative overflow-hidden transition-all hover:bg-rose-500/15">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-xs font-bold text-rose-700 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
                 <XCircle className="w-4 h-4" /> Incorrect
               </span>
-              <span className="text-[11px] font-mono font-bold text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-mono font-bold text-rose-700 dark:text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded-full">
                 {incorrectPercent}%
               </span>
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-display font-extrabold text-white">
+              <span className="text-4xl font-display font-extrabold text-slate-900 dark:text-white">
                 {incorrectQuestions.length}
               </span>
-              <span className="text-xs text-slate-400 font-medium">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 / {totalQuestions} questions
               </span>
             </div>
-            <p className="text-[11px] text-rose-300/80 leading-snug">
+            <p className="text-[11px] text-rose-700 dark:text-rose-300/80 leading-snug">
               Attempted with an incorrect option selected.
             </p>
           </div>
@@ -305,22 +305,22 @@ export default function QuizResultPage() {
           {/* 3. Did Not Attempt Card */}
           <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2 relative overflow-hidden transition-all hover:bg-amber-500/15">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                 <MinusCircle className="w-4 h-4" /> Did Not Attempt
               </span>
-              <span className="text-[11px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full">
                 {unattemptedPercent}%
               </span>
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-display font-extrabold text-white">
+              <span className="text-4xl font-display font-extrabold text-slate-900 dark:text-white">
                 {unattemptedQuestions.length}
               </span>
-              <span className="text-xs text-slate-400 font-medium">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 / {totalQuestions} questions
               </span>
             </div>
-            <p className="text-[11px] text-amber-300/80 leading-snug">
+            <p className="text-[11px] text-amber-700 dark:text-amber-300/80 leading-snug">
               Skipped without selecting any option during the assessment.
             </p>
           </div>
@@ -529,18 +529,18 @@ export default function QuizResultPage() {
               <div
                 id={`question-card-${originalIndex >= 0 ? originalIndex : idx}`}
                 key={q.question_id || idx}
-                className={`card p-6 sm:p-7 space-y-5 border-l-4 transition-all scroll-mt-24 ${
+                className={`card p-6 sm:p-7 space-y-5 border-l-4 transition-all scroll-mt-24 bg-white dark:bg-surface-800/90 ${
                   isUnanswered
-                    ? 'border-l-amber-500 bg-surface-800/90'
+                    ? 'border-l-amber-500'
                     : isCorrect 
-                    ? 'border-l-emerald-500 bg-surface-800/90' 
-                    : 'border-l-rose-500 bg-surface-800/90'
+                    ? 'border-l-emerald-500' 
+                    : 'border-l-rose-500'
                 }`}
               >
                 {/* Question Header */}
                 <div className="flex items-center justify-between text-xs gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-white bg-surface-700 px-2.5 py-1 rounded-md border border-white/5">
+                    <span className="font-bold text-slate-800 dark:text-white bg-slate-100 dark:bg-surface-700 px-2.5 py-1 rounded-md border border-slate-200 dark:border-white/5">
                       Question {displayIdx} of {totalQuestions}
                     </span>
                     {q.bloom_level && (
@@ -552,22 +552,22 @@ export default function QuizResultPage() {
 
                   {/* Status Badge */}
                   {isUnanswered ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/40">
                       <MinusCircle className="w-3.5 h-3.5" /> Did Not Attempt
                     </span>
                   ) : isCorrect ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Correct (+1 Mark)
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/15 text-rose-700 dark:text-rose-400 border border-rose-500/40">
                       <XCircle className="w-3.5 h-3.5" /> Incorrect
                     </span>
                   )}
                 </div>
 
                 {/* Question Text */}
-                <h4 className="font-bold text-white text-base leading-relaxed">
+                <h4 className="font-bold text-slate-900 dark:text-white text-base leading-relaxed">
                   {q.question_text}
                 </h4>
 
@@ -583,31 +583,31 @@ export default function QuizResultPage() {
                     const isThisCorrect = rawCorrect === optKey
                     const isThisUserSelection = rawSelected === optKey
 
-                    let containerStyles = 'bg-surface-700/30 border-white/5 text-slate-400 opacity-80'
+                    let containerStyles = 'bg-slate-50 dark:bg-surface-700/30 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400'
                     let badgeNode = null
 
                     if (isThisUserSelection && isThisCorrect) {
                       // Correct selection by user
-                      containerStyles = 'bg-emerald-500/15 border-emerald-500/70 text-white shadow-sm ring-1 ring-emerald-500/40'
+                      containerStyles = 'bg-emerald-50 dark:bg-emerald-500/15 border-emerald-500/70 text-slate-900 dark:text-white shadow-sm ring-1 ring-emerald-500/40'
                       badgeNode = (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-500/25 px-2.5 py-1 rounded-full border border-emerald-500/40 ml-auto flex-shrink-0">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Your Selection (Correct)
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-500/25 px-2.5 py-1 rounded-full border border-emerald-500/40 ml-auto flex-shrink-0">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Your Selection (Correct)
                         </span>
                       )
                     } else if (isThisCorrect) {
                       // Official correct answer (not chosen by user or user skipped)
-                      containerStyles = 'bg-emerald-500/10 border-emerald-500/50 text-emerald-200'
+                      containerStyles = 'bg-emerald-50/70 dark:bg-emerald-500/10 border-emerald-500/50 text-emerald-900 dark:text-emerald-200'
                       badgeNode = (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-500/30 ml-auto flex-shrink-0">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Correct Option
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-500/30 ml-auto flex-shrink-0">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Correct Option
                         </span>
                       )
                     } else if (isThisUserSelection && !isThisCorrect) {
                       // Wrong selection by user
-                      containerStyles = 'bg-rose-500/15 border-rose-500/70 text-white shadow-sm ring-1 ring-rose-500/40'
+                      containerStyles = 'bg-rose-50 dark:bg-rose-500/15 border-rose-500/70 text-slate-900 dark:text-white shadow-sm ring-1 ring-rose-500/40'
                       badgeNode = (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-300 bg-rose-500/25 px-2.5 py-1 rounded-full border border-rose-500/40 ml-auto flex-shrink-0">
-                          <XCircle className="w-3.5 h-3.5 text-rose-400" /> Your Selection (Wrong)
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-700 dark:text-rose-300 bg-rose-500/25 px-2.5 py-1 rounded-full border border-rose-500/40 ml-auto flex-shrink-0">
+                          <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" /> Your Selection (Wrong)
                         </span>
                       )
                     }
@@ -623,10 +623,10 @@ export default function QuizResultPage() {
                               isThisUserSelection && isThisCorrect
                                 ? 'bg-emerald-500 text-white'
                                 : isThisCorrect
-                                ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-500/50'
+                                ? 'bg-emerald-500/30 text-emerald-700 dark:text-emerald-300 border border-emerald-500/50'
                                 : isThisUserSelection
                                 ? 'bg-rose-500 text-white'
-                                : 'bg-surface-600 text-slate-400'
+                                : 'bg-slate-200 dark:bg-surface-600 text-slate-700 dark:text-slate-400'
                             }`}
                           >
                             {opt.key}
@@ -648,32 +648,32 @@ export default function QuizResultPage() {
                       ? 'bg-emerald-500/10 border-emerald-500/30' 
                       : 'bg-rose-500/10 border-rose-500/30'
                   }`}>
-                    <span className="text-[10px] font-bold tracking-wider uppercase block text-slate-400 mb-1">Your Selection</span>
+                    <span className="text-[10px] font-bold tracking-wider uppercase block text-slate-500 dark:text-slate-400 mb-1">Your Selection</span>
                     <div className="flex items-center gap-2">
                       {isUnanswered ? (
-                        <span className="text-amber-400 font-semibold text-xs flex items-center gap-1.5">
-                          <MinusCircle className="w-4 h-4 text-amber-400 flex-shrink-0" /> Did Not Attempt (Skipped)
+                        <span className="text-amber-600 dark:text-amber-400 font-semibold text-xs flex items-center gap-1.5">
+                          <MinusCircle className="w-4 h-4 text-amber-500 dark:text-amber-400 flex-shrink-0" /> Did Not Attempt (Skipped)
                         </span>
                       ) : isCorrect ? (
-                        <span className="text-emerald-400 font-semibold text-xs flex items-center gap-1.5">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                          <span><strong className="text-white">Option {rawSelected}:</strong> {getOptionText(q, rawSelected)}</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-xs flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
+                          <span><strong className="text-slate-900 dark:text-white">Option {rawSelected}:</strong> {getOptionText(q, rawSelected)}</span>
                         </span>
                       ) : (
-                        <span className="text-rose-400 font-semibold text-xs flex items-center gap-1.5">
-                          <XCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
-                          <span><strong className="text-white">Option {rawSelected}:</strong> {getOptionText(q, rawSelected)}</span>
+                        <span className="text-rose-600 dark:text-rose-400 font-semibold text-xs flex items-center gap-1.5">
+                          <XCircle className="w-4 h-4 text-rose-500 dark:text-rose-400 flex-shrink-0" />
+                          <span><strong className="text-slate-900 dark:text-white">Option {rawSelected}:</strong> {getOptionText(q, rawSelected)}</span>
                         </span>
                       )}
                     </div>
                   </div>
 
                   <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
-                    <span className="text-[10px] font-bold tracking-wider uppercase block text-slate-400 mb-1">Official Correct Option</span>
-                    <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                      <span className="text-emerald-300">
-                        <strong className="text-white">Option {rawCorrect}:</strong> {getOptionText(q, rawCorrect)}
+                    <span className="text-[10px] font-bold tracking-wider uppercase block text-slate-500 dark:text-slate-400 mb-1">Official Correct Option</span>
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
+                      <span className="text-emerald-700 dark:text-emerald-300">
+                        <strong className="text-slate-900 dark:text-white">Option {rawCorrect}:</strong> {getOptionText(q, rawCorrect)}
                       </span>
                     </div>
                   </div>
@@ -681,11 +681,11 @@ export default function QuizResultPage() {
 
                 {/* Explanation Card */}
                 {q.explanation && (
-                  <div className="p-4 rounded-xl bg-surface-700/40 border border-white/5 text-xs text-slate-300 flex items-start gap-3">
-                    <BookOpen className="w-4 h-4 text-brand-400 flex-shrink-0 mt-0.5" />
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-surface-700/40 border border-slate-200 dark:border-white/5 text-xs text-slate-600 dark:text-slate-300 flex items-start gap-3">
+                    <BookOpen className="w-4 h-4 text-brand-500 dark:text-brand-400 flex-shrink-0 mt-0.5" />
                     <div className="space-y-1">
-                      <strong className="text-white block font-semibold">Official Curriculum Explanation</strong>
-                      <p className="text-slate-300 leading-relaxed">{q.explanation}</p>
+                      <strong className="text-slate-900 dark:text-white block font-semibold">Official Curriculum Explanation</strong>
+                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{q.explanation}</p>
                     </div>
                   </div>
                 )}

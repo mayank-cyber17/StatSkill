@@ -30,10 +30,10 @@ export default function SkillGapPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <Target className="w-7 h-7 text-brand-400" /> Skill Gap Intelligence Matrix
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <Target className="w-7 h-7 text-brand-600 dark:text-brand-400" /> Skill Gap Intelligence Matrix
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             Automated evaluation of current competency scores against MoSPI job role standards.
           </p>
         </div>
@@ -46,10 +46,10 @@ export default function SkillGapPage() {
       {/* Critical Gaps Banner */}
       <div className="p-6 rounded-2xl bg-danger-500/10 border border-danger-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <ShieldAlert className="w-8 h-8 text-danger-400 shrink-0" />
+          <ShieldAlert className="w-8 h-8 text-danger-500 dark:text-danger-400 shrink-0" />
           <div>
-            <h4 className="font-bold text-white text-base">{highPriorityCount} High-Priority Competency Gaps Detected</h4>
-            <p className="text-slate-300 text-xs mt-0.5">
+            <h4 className="font-bold text-slate-900 dark:text-white text-base">{highPriorityCount} High-Priority Competency Gaps Detected</h4>
+            <p className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
               Identified by your official competency assessment against Indian Statistical System cadre benchmarks.
             </p>
           </div>
@@ -62,14 +62,14 @@ export default function SkillGapPage() {
 
       {/* Gap Matrix Table */}
       <div className="card overflow-hidden">
-        <div className="p-6 border-b border-white/10 flex items-center justify-between">
-          <h3 className="font-display font-bold text-white text-base">Detailed Skill Gap Matrix</h3>
-          <span className="text-xs text-slate-400">Total {gaps.length} Competencies Evaluated</span>
+        <div className="p-6 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+          <h3 className="font-display font-bold text-slate-900 dark:text-white text-base">Detailed Skill Gap Matrix</h3>
+          <span className="text-xs text-slate-500 dark:text-slate-400">Total {gaps.length} Competencies Evaluated</span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="bg-surface-700/50 text-xs uppercase font-semibold text-slate-400 border-b border-white/10">
+          <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300">
+            <thead className="bg-slate-50 dark:bg-surface-700/50 text-xs uppercase font-semibold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
               <tr>
                 <th className="px-6 py-4">Competency Name</th>
                 <th className="px-6 py-4">Domain</th>
@@ -80,25 +80,25 @@ export default function SkillGapPage() {
                 <th className="px-6 py-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
               {gaps.map((g) => (
-                <tr key={g.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4 font-semibold text-white">{g.name}</td>
+                <tr key={g.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                  <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">{g.name}</td>
                   <td className="px-6 py-4">
                     <span className={`badge ${g.domain === 'Technical' ? 'badge-brand' : g.domain === 'Statistical' ? 'badge-success' : 'badge-neutral'}`}>
                       {g.domain}
                     </span>
                   </td>
-                  <td className="px-6 py-4 font-mono font-bold text-brand-300">{g.current} / 5.0</td>
-                  <td className="px-6 py-4 font-mono font-bold text-slate-200">{g.required} / 5.0</td>
-                  <td className="px-6 py-4 font-mono font-bold text-amber-400">+{g.gap}</td>
+                  <td className="px-6 py-4 font-mono font-bold text-brand-600 dark:text-brand-300">{g.current} / 5.0</td>
+                  <td className="px-6 py-4 font-mono font-bold text-slate-700 dark:text-slate-200">{g.required} / 5.0</td>
+                  <td className="px-6 py-4 font-mono font-bold text-amber-600 dark:text-amber-400">+{g.gap}</td>
                   <td className="px-6 py-4">
                     <span className={`badge ${g.priority === 'HIGH' ? 'badge-danger' : g.priority === 'MEDIUM' ? 'badge-warn' : 'badge-neutral'}`}>
                       {g.priority}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link to="/igot" className="btn btn-ghost text-xs text-brand-400 hover:text-white">
+                    <Link to="/igot" className="btn btn-ghost text-xs text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-white">
                       Find Course →
                     </Link>
                   </td>

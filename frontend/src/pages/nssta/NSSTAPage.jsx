@@ -34,16 +34,16 @@ export default function NSSTAPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white flex items-center gap-3">
-            <GraduationCap className="w-7 h-7 text-amber-400" /> NSSTA TPAC Training Calendar
+          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <GraduationCap className="w-7 h-7 text-amber-500 dark:text-amber-400" /> NSSTA TPAC Training Calendar
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
             National Statistical Systems Training Academy (NSSTA) official capacity building programs.
           </p>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-800 border border-white/10 text-xs text-amber-300">
-          <Sparkles className="w-4 h-4 text-amber-400" /> Linked with Official Designation Target
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-surface-800 border border-slate-200 dark:border-white/10 text-xs text-amber-600 dark:text-amber-300">
+          <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" /> Linked with Official Designation Target
         </div>
       </div>
 
@@ -53,20 +53,20 @@ export default function NSSTAPage() {
           const nominationStatus = nominatedMap[prog.id]
 
           return (
-            <div key={prog.id} className="card-glow p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-l-4 border-l-amber-500">
+            <div key={prog.id} className="card-glow p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-l-4 border-l-amber-500 bg-white dark:bg-surface-800">
               <div className="space-y-3 max-w-3xl">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="badge badge-warn font-mono">{prog.program_code}</span>
                   <span className="badge badge-neutral">{prog.mode}</span>
-                  <span className="text-slate-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {prog.venue}</span>
+                  <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {prog.venue}</span>
                 </div>
 
-                <h3 className="text-lg font-bold text-white">{prog.title}</h3>
-                <p className="text-slate-300 text-xs leading-relaxed">{prog.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{prog.title}</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">{prog.description}</p>
 
-                <div className="flex flex-wrap gap-4 text-xs text-slate-400 pt-1">
-                  <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-amber-400" /> {prog.start_date} to {prog.end_date}</span>
-                  <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-brand-400" /> Capacity: {prog.capacity} Seats</span>
+                <div className="flex flex-wrap gap-4 text-xs text-slate-500 dark:text-slate-400 pt-1">
+                  <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-amber-500 dark:text-amber-400" /> {prog.start_date} to {prog.end_date}</span>
+                  <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-brand-500 dark:text-brand-400" /> Capacity: {prog.capacity} Seats</span>
                 </div>
               </div>
 
@@ -74,7 +74,7 @@ export default function NSSTAPage() {
                 <button
                   onClick={() => handleNominate(prog.id)}
                   disabled={!!nominationStatus}
-                  className={`btn w-full py-3 ${nominationStatus ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'btn-primary'}`}
+                  className={`btn w-full py-3 ${nominationStatus ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/30' : 'btn-primary'}`}
                 >
                   {nominationStatus ? (
                     <>
