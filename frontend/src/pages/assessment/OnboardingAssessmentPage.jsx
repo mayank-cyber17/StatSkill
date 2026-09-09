@@ -29,9 +29,10 @@ export default function OnboardingAssessmentPage() {
   useEffect(() => {
     let isMounted = true
     async function fetchOnboardingQuiz() {
-      // 1. Check local storage
-      const localKey = user?.id ? `baseline_completed_${user.id}` : 'statiq_baseline_completed'
-      if (localStorage.getItem(localKey) === 'true' || localStorage.getItem('statiq_baseline_completed') === 'true') {
+      // 1. Remove stale global key if present and check user-scoped local storage
+      localStorage.removeItem('statiq_baseline_completed')
+      const localKey = user?.id ? `baseline_completed_${user.id}` : null
+      if (localKey && localStorage.getItem(localKey) === 'true') {
         if (isMounted) setAlreadyCompleted(true)
       }
 
@@ -40,7 +41,6 @@ export default function OnboardingAssessmentPage() {
         const statusRes = await quizAPI.getOnboardingStatus()
         if (isMounted && statusRes.data?.has_completed_baseline) {
           if (user?.id) localStorage.setItem(`baseline_completed_${user.id}`, 'true')
-          localStorage.setItem('statiq_baseline_completed', 'true')
           setAlreadyCompleted(true)
         }
       } catch (err) {
@@ -224,7 +224,7 @@ export default function OnboardingAssessmentPage() {
       if (user?.id) {
         localStorage.setItem(`baseline_completed_${user.id}`, 'true')
       }
-      localStorage.setItem('statiq_baseline_completed', 'true')
+      localStorage.removeItem('statiq_baseline_completed')
       setAlreadyCompleted(true)
       queryClient.invalidateQueries({ queryKey: ['competency-profile'] })
       queryClient.invalidateQueries({ queryKey: ['skill-gaps'] })
@@ -281,7 +281,7 @@ export default function OnboardingAssessmentPage() {
     if (user?.id) {
       localStorage.setItem(`baseline_completed_${user.id}`, 'true')
     }
-    localStorage.setItem('statiq_baseline_completed', 'true')
+    localStorage.removeItem('statiq_baseline_completed')
     queryClient.invalidateQueries()
     navigate('/dashboard')
   }

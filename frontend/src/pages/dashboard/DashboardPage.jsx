@@ -102,8 +102,7 @@ export default function DashboardPage() {
         { id: 3, title: 'Consumer Price Index (CPI) Weighting & Laspeyres Formula', type: 'IGOT_COURSE', estHours: 8, status: 'PENDING' },
       ]
 
-  const localAssessed = (user?.id && localStorage.getItem(`baseline_completed_${user.id}`) === 'true')
-    || localStorage.getItem('statiq_baseline_completed') === 'true'
+  const localAssessed = Boolean(user?.id && localStorage.getItem(`baseline_completed_${user.id}`) === 'true')
 
   const attemptsList = Array.isArray(quizHistory?.data) ? quizHistory.data : []
   const quizzesDone = attemptsList.filter((a) => a.status === 'COMPLETED').length
@@ -114,9 +113,7 @@ export default function DashboardPage() {
   const hasAssessed = Boolean(
     localAssessed ||
     onboardingStatus?.data?.has_completed_baseline ||
-    quizzesDone > 0 ||
-    compRes?.data?.competencies?.some((c) => c.method === 'ASSESSMENT_EVALUATED') ||
-    (pathRes?.data?.items && pathRes.data.items.length > 0)
+    compRes?.data?.competencies?.some((c) => c.method === 'ASSESSMENT_EVALUATED')
   )
   const avgLevel = compRes?.data?.average_level || 3.2
   const pathwayProgress = pathRes?.data?.completion_percentage !== undefined

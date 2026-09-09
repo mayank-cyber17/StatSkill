@@ -161,11 +161,24 @@ async def get_onboarding_status(
     current_user: User = Depends(get_current_user), 
     db: AsyncSession = Depends(get_db)
 ):
-    result = await db.execute(
-        select(QuizAttempt)
-        .where(QuizAttempt.user_id == current_user.id, QuizAttempt.status == "COMPLETED")
-        .order_by(QuizAttempt.id.desc())
+    quiz_res = await db.execute(
+        select(Quiz).where(Quiz.title.like("%Baseline Competency%") | Quiz.title.like("%Onboarding%"))
     )
+    quiz = quiz_res.scalars().first()
+    quiz_id = quiz.id if quiz else None
+
+    if quiz_id:
+        result = await db.execute(
+            select(QuizAttempt)
+            .where(QuizAttempt.user_id == current_user.id, QuizAttempt.quiz_id == quiz_id, QuizAttempt.status == "COMPLETED")
+            .order_by(QuizAttempt.id.desc())
+        )
+    else:
+        result = await db.execute(
+            select(QuizAttempt)
+            .where(QuizAttempt.user_id == current_user.id, QuizAttempt.status == "COMPLETED")
+            .order_by(QuizAttempt.id.desc())
+        )
     attempts = result.scalars().all()
     
     from app.models.profile import CompetencyProfile
